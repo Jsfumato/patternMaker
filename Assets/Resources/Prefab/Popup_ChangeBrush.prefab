@@ -403,8 +403,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: 440
+  m_MinWidth: 400
+  m_MinHeight: 400
   m_PreferredWidth: -1
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
@@ -531,7 +531,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3471065777490901866}
         m_MethodName: OnOK
         m_Mode: 1
         m_Arguments:
@@ -685,7 +685,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3471065777490901866}
         m_MethodName: OnCancel
         m_Mode: 1
         m_Arguments:
@@ -884,9 +884,9 @@ MonoBehaviour:
     m_Right: 10
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 10
-  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
@@ -1382,10 +1382,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3315734131951453646}
     m_Modifications:
-    - target: {fileID: 154636, guid: af8ebf3eda3f41146bb902219c03964f, type: 3}
-      propertyPath: m_Name
-      value: ColorWheel
-      objectReference: {fileID: 0}
     - target: {fileID: 22415502, guid: af8ebf3eda3f41146bb902219c03964f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1469,6 +1465,10 @@ PrefabInstance:
     - target: {fileID: 22415502, guid: af8ebf3eda3f41146bb902219c03964f, type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 154636, guid: af8ebf3eda3f41146bb902219c03964f, type: 3}
+      propertyPath: m_Name
+      value: ColorWheel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af8ebf3eda3f41146bb902219c03964f, type: 3}

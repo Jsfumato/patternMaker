@@ -20,10 +20,7 @@ public class RuntimePalette : MonoBehaviour
     // private
     private int oldp;
     private Texture2D myimage;
-
-    private int sw;
-    private int sh;
-
+    
     private float mx;
     private float my;
 
@@ -137,12 +134,15 @@ public class RuntimePalette : MonoBehaviour
 
         var touchedPos = Utility.GetFakeTouch(Input.mousePosition).position;
 #endif
+        Vector2 dir = new Vector2(rectTrans.position.x, rectTrans.position.y) - touchedPos;
 
-        sw = Screen.width;
-        sh = Screen.height;
+        if (Mathf.Abs(dir.x) >= rectTrans.rect.width / 2)
+            return;
+        if (Mathf.Abs(dir.y) >= rectTrans.rect.height / 2)
+            return;
 
-        mx = touchedPos.x / sw + (rectTrans.localPosition.x - rectTrans.rect.width / 2);
-        my = touchedPos.y / sh + (rectTrans.localPosition.y - rectTrans.rect.height / 2);
+        mx = touchedPos.x / Screen.width + (rectTrans.localPosition.x - rectTrans.rect.width / 2);
+        my = touchedPos.y / Screen.height + (rectTrans.localPosition.y - rectTrans.rect.height / 2);
 
         px = Mathf.RoundToInt(myimage.width * mx);
         py = Mathf.RoundToInt(myimage.height * my) - 1;
@@ -160,6 +160,20 @@ public class RuntimePalette : MonoBehaviour
                 Erase(px, py);
         }
     }
+
+    //public void OnClick() {
+    //    //Check if click was in outer circle
+    //    if (Vector2.Distance(rectTrans.position, Input.mousePosition) <= _width / 2 &&
+    //       Vector2.Distance(rectTrans.position, Input.mousePosition) >= halfSize - halfSize / 4) {
+    //        dragOuter = true;
+    //        return;
+    //        //Check if click was in inner box
+    //    } else if (Mathf.Abs(rectTrans.position.x - Input.mousePosition.x) <= halfSize / 2 &&
+    //              Mathf.Abs(RectTrans.position.y - Input.mousePosition.y) <= halfSize / 2) {
+    //        dragInner = truerectTrans
+    //        return;
+    //    }
+    //}
 
     private void Draw(int px, int py, Color color) {
         //

@@ -13,6 +13,8 @@ public class Popup_ChangeBrush : MonoBehaviour {
 
     public void Initialize(ChangeBrushDelegate callback) {
         _callback = callback;
+
+        colorControl.Initialize(400f);
     }
 
     public void OnOK() {

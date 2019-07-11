@@ -31,32 +31,31 @@ public class ColorWheelControl : MonoBehaviour {
 
 	private float halfSize;
 
-	//Set up the transforms
-	void Start(){
-		//Get the rect transform and make x and y the same to avoid streching
-		RectTrans =  GetComponent<RectTransform>();
-		RectTrans.sizeDelta = new Vector2(RectTrans.sizeDelta.x, RectTrans.sizeDelta.x);
 
-		//Find and scale the children
-		SelectorOut = transform.Find ("Selector_Out").GetComponent<RectTransform>();
-		SelectorIn = transform.Find ("Selector_In").GetComponent<RectTransform>();
+    public void Initialize(float width) {
+        //Get the rect transform and make x and y the same to avoid streching
+        RectTrans = GetComponent<RectTransform>();
+        RectTrans.sizeDelta = new Vector2(width, width);
 
-		SelectorOut.sizeDelta =  RectTrans.sizeDelta / 20.0f;
-		SelectorIn.sizeDelta =  RectTrans.sizeDelta / 20.0f;
+        //Find and scale the children
+        SelectorOut = transform.Find("Selector_Out").GetComponent<RectTransform>();
+        SelectorIn = transform.Find("Selector_In").GetComponent<RectTransform>();
 
-		//Calculate the half size
-		halfSize = RectTrans.sizeDelta.x / 2;
+        SelectorOut.sizeDelta = RectTrans.sizeDelta / 20.0f;
+        SelectorIn.sizeDelta = RectTrans.sizeDelta / 20.0f;
 
-		//Set the material
-		mat = GetComponent<Image>().material;
+        //Calculate the half size
+        halfSize = width / 2;
 
-		//Set first selected value to red (0° rotation and upper right corner in the box)
-		Selection = Color.red;
+        //Set the material
+        mat = GetComponent<Image>().material;
 
-		//Update the material of the box to red
-		updateMaterial();
-	}
+        //Set first selected value to red (0° rotation and upper right corner in the box)
+        Selection = Color.red;
 
+        //Update the material of the box to red
+        updateMaterial();
+    }
 
 
 	//Update the selectors
