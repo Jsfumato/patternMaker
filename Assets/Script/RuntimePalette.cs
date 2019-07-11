@@ -44,7 +44,8 @@ public class RuntimePalette : MonoBehaviour
         return _palette;
     }
 
-    public enum DrawMode {
+    public enum DrawMode
+    {
         Draw = 0,
         Erase
     }
@@ -92,7 +93,7 @@ public class RuntimePalette : MonoBehaviour
         //
         _init = true;
     }
-    
+
     public void OnChangeCanvasSize(int width, int height) {
         myimage = new Texture2D(width, height);
         rectTrans.sizeDelta = new Vector2(width, height);
@@ -117,6 +118,11 @@ public class RuntimePalette : MonoBehaviour
 
         //
         rawImg.texture = myimage;
+    }
+
+    public void OnChangeBrush(Color brushColor, int brushSize) {
+        this.drawcolor = brushColor;
+        this.brushSize = brushSize;
     }
 
     void Update() {

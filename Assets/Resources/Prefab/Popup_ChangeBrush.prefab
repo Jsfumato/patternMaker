@@ -390,6 +390,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colorControl: {fileID: 3122803272375443089}
+--- !u!114 &3009380894730768401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3122803272385107281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: 440
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &3193740964234875584
 GameObject:
   m_ObjectHideFlags: 0
@@ -867,9 +887,9 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_Spacing: 10
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
 --- !u!1 &5146491076459873646
@@ -1057,7 +1077,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 22}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2456385234320710919
 CanvasRenderer:
@@ -1424,7 +1444,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22415502, guid: af8ebf3eda3f41146bb902219c03964f, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 440
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22415502, guid: af8ebf3eda3f41146bb902219c03964f, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1458,7 +1478,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 3122803272385251677}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 3122803272385107281}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed2c6afe74ecb7548b7c676d57a2373c, type: 3}
@@ -1467,6 +1487,12 @@ MonoBehaviour:
 --- !u!224 &3122803272363360723 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 22415502, guid: af8ebf3eda3f41146bb902219c03964f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3122803272385251677}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3122803272385107281 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 154636, guid: af8ebf3eda3f41146bb902219c03964f,
     type: 3}
   m_PrefabInstance: {fileID: 3122803272385251677}
   m_PrefabAsset: {fileID: 0}

@@ -11,7 +11,7 @@ public class Popup_ChangeBrush : MonoBehaviour {
     private Color _selected;
     private int _size;
 
-    public void Initialzie(ChangeBrushDelegate callback) {
+    public void Initialize(ChangeBrushDelegate callback) {
         _callback = callback;
     }
 
