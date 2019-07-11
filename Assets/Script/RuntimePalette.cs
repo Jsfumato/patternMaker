@@ -122,7 +122,11 @@ public class RuntimePalette : MonoBehaviour
         this.brushSize = brushSize;
     }
 
+    private bool _touched = false;
     void Update() {
+        if (!_touched)
+            return;
+
 #if !UNITY_EDITOR
         if (Input.touchCount <= 0)
             return;
@@ -141,11 +145,9 @@ public class RuntimePalette : MonoBehaviour
         if (Mathf.Abs(dir.y) >= rectTrans.rect.height / 2)
             return;
 
-        mx = touchedPos.x / Screen.width + (rectTrans.localPosition.x - rectTrans.rect.width / 2);
-        my = touchedPos.y / Screen.height + (rectTrans.localPosition.y - rectTrans.rect.height / 2);
-
-        px = Mathf.RoundToInt(myimage.width * mx);
-        py = Mathf.RoundToInt(myimage.height * my) - 1;
+        //
+        px = Mathf.RoundToInt(rectTrans.rect.width * ((rectTrans.rect.width / 2 - dir.x) / rectTrans.rect.width));
+        py = Mathf.RoundToInt(rectTrans.rect.height * ((rectTrans.rect.height / 2 - dir.y) / rectTrans.rect.height));
 
         // <-- only draw when mouse moves for proficiency
         if (px + py != oldp) {
@@ -159,6 +161,14 @@ public class RuntimePalette : MonoBehaviour
             else if (_mode == DrawMode.Erase)
                 Erase(px, py);
         }
+    }
+
+    public void OnPointerDown() {
+        _touched = true;
+    }
+
+    public void OnPointerUP() {
+        _touched = false;
     }
 
     //public void OnClick() {
