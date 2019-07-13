@@ -141,10 +141,12 @@ public class RuntimePalette : MonoBehaviour
 #endif
         Vector2 dir = new Vector2(rectTrans.position.x, rectTrans.position.y) - touchedPos;
 
-        if (Mathf.Abs(dir.x) >= rectTrans.rect.width / 2)
+        //
+        if ((Mathf.Abs(dir.x) >= rectTrans.rect.width / 2)
+            || (Mathf.Abs(dir.y) >= rectTrans.rect.height / 2)) {
+            _touched = false;
             return;
-        if (Mathf.Abs(dir.y) >= rectTrans.rect.height / 2)
-            return;
+        }
 
         //
         int _px = Mathf.RoundToInt(rectTrans.rect.width * ((rectTrans.rect.width / 2 - dir.x) / rectTrans.rect.width));
@@ -182,7 +184,13 @@ public class RuntimePalette : MonoBehaviour
 
     public void OnPointerUP() {
         _touched = false;
+
+        //
         _logs.Add(_currentLog);
+        if (_logs.Count > 20)
+            _logs.RemoveAt(0);
+
+        //
         oldp = Vector2.zero;
 
         //
