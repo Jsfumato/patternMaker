@@ -18,6 +18,8 @@ public class RuntimePalette : MonoBehaviour
 
     public Color drawcolor;
 
+    public bool fillmode = false;
+
     // private
     private Vector2 oldp = Vector2.zero;
     private Texture2D myimage;
@@ -139,6 +141,7 @@ public class RuntimePalette : MonoBehaviour
 
         var touchedPos = Utility.GetFakeTouch(Input.mousePosition).position;
 #endif
+
         Vector2 dir = new Vector2(rectTrans.position.x, rectTrans.position.y) - touchedPos;
 
         //
@@ -154,6 +157,13 @@ public class RuntimePalette : MonoBehaviour
 
         int _oldX = Mathf.RoundToInt(oldp.x);
         int _oldY = Mathf.RoundToInt(oldp.y);
+
+        //
+        if (fillmode) {
+            FloodFill(myimage, new Vector2(_px, _py), drawcolor);
+            return;
+        }
+
 
         // <-- only draw when mouse moves for proficiency
         if (_px == _oldX && _py == _oldY)
@@ -205,7 +215,7 @@ public class RuntimePalette : MonoBehaviour
 
         //
         oldp = new Vector2(px, py);
-        
+
         ////
         //int _widthIdx = 0;
         //while (_widthIdx++ < brushSize) {
@@ -221,7 +231,7 @@ public class RuntimePalette : MonoBehaviour
 
         //        //
         //        myimage.SetPixel(px + _widthIdx, py + _heightIdx, color);
-                
+
         //    }
         //}
     }
@@ -287,11 +297,84 @@ public class RuntimePalette : MonoBehaviour
     public void MarkPixelToChange(int x, int y, Color color) {
         // Need to transform x and y coordinates to flat coordinates of array
         int array_pos = y * myimage.width + x;
-        
+
         // Check if this is a valid position
         if (array_pos > cur_colors.Length || array_pos < 0)
             return;
 
         cur_colors[array_pos] = color;
+    }
+
+    //===================================================
+    void FloodFill(Texture2D image, Vector2 point, Color color) {
+        Color32[] _colors = image.GetPixels32();
+
+        // Create WestEast
+
+        //
+        var m_List = new Queue<Vector2>();
+        var m_WestEast = new List<int>();
+
+        //
+        //get pixel 1 to left (w) of Q[n]
+        int _array_pos_base = Mathf.RoundToInt(point.y) * image.width + Mathf.RoundToInt(point.x);
+        // Check if this is a valid position
+        if (_array_pos_base > _colors.Length || _array_pos_base < 0)
+            return;
+
+        //
+        m_List.Enqueue(point);
+        var _colToCompare = _colors[_array_pos_base];
+
+        // east
+        var _array_pos = _array_pos_base;
+        int _newX = Mathf.RoundToInt(point.x);
+        int _newY = Mathf.RoundToInt(point.y);
+        while (++_newX <= image.width) {
+            _array_pos = _newY * image.width + _newX;
+            Color wCol = _colors[_array_pos];
+            if (wCol == _colToCompare) {
+                m_List.Enqueue(new Vector2(_newX, _newY));
+            } else {
+                break;
+            }
+        }
+        // west
+        _array_pos = _array_pos_base;
+        _newX = Mathf.RoundToInt(point.x);
+        _newY = Mathf.RoundToInt(point.y);
+        while (--_newX >= 0) {
+            _array_pos = _newY * image.width + _newX;
+            Color wCol = _colors[_array_pos];
+            if (wCol == _colToCompare) {
+                m_List.Enqueue(new Vector2(_newX, _newY));
+            } else {
+                break;
+            }
+        }
+
+        //
+        foreach (var _p in m_List) {
+            _array_pos = Mathf.RoundToInt(_p.y) * image.width + Mathf.RoundToInt(_p.x);
+            _colors[_array_pos] = color;
+
+            //
+            //11.If the color of the node to the north of n is target-color, add that node to Q.
+            _newX = Mathf.RoundToInt(point.x);
+            _newY = Mathf.RoundToInt(point.y + 1);
+            _array_pos = _newY * image.width + _newX;
+            if (_array_pos < _colors.Length && _colors[_array_pos] != color) {
+                m_List.Enqueue(new Vector2());
+            }
+
+            //
+            //12.If the color of the node to the south of n is target - color, add that node to Q.
+            _newX = Mathf.RoundToInt(point.x);
+            _newY = Mathf.RoundToInt(point.y - 1);
+            _array_pos = _newY * image.width + _newX;
+            if (_array_pos >= 0 && _colors[_array_pos] != color) {
+                m_List.Enqueue(new Vector2());
+            }
+        }
     }
 }
