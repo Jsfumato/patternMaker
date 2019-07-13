@@ -138,6 +138,8 @@ public class RuntimePalette : MonoBehaviour
 
         var touchedPos = Utility.GetFakeTouch(Input.mousePosition).position;
 #endif
+        Debug.Log(touchedPos);
+
         Vector2 dir = new Vector2(rectTrans.position.x, rectTrans.position.y) - touchedPos;
 
         if (Mathf.Abs(dir.x) >= rectTrans.rect.width / 2)
