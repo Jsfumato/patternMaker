@@ -27,6 +27,7 @@ public class RuntimePalette : MonoBehaviour
     private List<Vector2> _currentLog = new List<Vector2>();
 
     private Color32[] cur_colors;
+    private bool _drawing = false;
 
     //
     private static RuntimePalette _palette;
@@ -123,6 +124,7 @@ public class RuntimePalette : MonoBehaviour
 
     private bool _touched = false;
     void Update() {
+        //
         if (!_touched)
             return;
 
@@ -187,35 +189,33 @@ public class RuntimePalette : MonoBehaviour
         myimage.SetPixels32(cur_colors);
         myimage.Apply();
 
-        rawImg.texture = myimage;
+        //rawImg.texture = myimage;
     }
 
     private void Draw(int px, int py, int width, Color color) {
+        StartCoroutine(CoColourBetween(oldp, new Vector2(px, py), width, color));
+
         //
-        int _widthIdx = 0;
-        while (_widthIdx++ < brushSize) {
-            int _heightIdx = 0;
-            while (_heightIdx++ < brushSize) {
-                //<---dont try to draw off image width
-                if ((px + _widthIdx) <= -1 || (px + _widthIdx) >= myimage.width)
-                    continue;
+        oldp = new Vector2(px, py);
+        
+        ////
+        //int _widthIdx = 0;
+        //while (_widthIdx++ < brushSize) {
+        //    int _heightIdx = 0;
+        //    while (_heightIdx++ < brushSize) {
+        //        //<---dont try to draw off image width
+        //        if ((px + _widthIdx) <= -1 || (px + _widthIdx) >= myimage.width)
+        //            continue;
 
-                //<---dont try to draw off image height
-                if ((py + _heightIdx) <= -1 || (py + _heightIdx) >= myimage.height)
-                    continue;
+        //        //<---dont try to draw off image height
+        //        if ((py + _heightIdx) <= -1 || (py + _heightIdx) >= myimage.height)
+        //            continue;
 
-                //
-                //if (oldp == Vector2.zero)
-                //    myimage.SetPixel(px + _widthIdx, py + _heightIdx, color);
-                //else
-                ColourBetween(oldp, new Vector2(px, py), width, color);
-
-                //
-                oldp = new Vector2(px, py);
-            }
-        }
-
-
+        //        //
+        //        myimage.SetPixel(px + _widthIdx, py + _heightIdx, color);
+                
+        //    }
+        //}
     }
 
     private void Erase(int px, int py) {
@@ -223,21 +223,41 @@ public class RuntimePalette : MonoBehaviour
     }
 
     //===========================================
-    public void ColourBetween(Vector2 start_point, Vector2 end_point, int width, Color color) {
+    public IEnumerator CoColourBetween(Vector2 start_point, Vector2 end_point, int width, Color color) {
         // Get the distance from start to finish
         float distance = Vector2.Distance(start_point, end_point);
-        Vector2 direction = (start_point - end_point).normalized;
-
-        Vector2 cur_position = start_point;
 
         // Calculate how many times we should interpolate between start_point and end_point based on the amount of time that has passed since the last update
         float lerp_steps = 1 / distance;
 
+        //
         for (float lerp = 0; lerp <= 1; lerp += lerp_steps) {
-            cur_position = Vector2.Lerp(start_point, end_point, lerp);
+            var cur_position = Vector2.Lerp(start_point, end_point, lerp);
             MarkPixelsToColour(cur_position, width, color);
         }
+
+        //
+        myimage.SetPixels32(cur_colors);
+        myimage.Apply();
+
+        yield break;
     }
+
+    //public void ColourBetween(Vector2 start_point, Vector2 end_point, int width, Color color) {
+    //    // Get the distance from start to finish
+    //    float distance = Vector2.Distance(start_point, end_point);
+    //    Vector2 direction = (start_point - end_point).normalized;
+
+    //    Vector2 cur_position = start_point;
+
+    //    // Calculate how many times we should interpolate between start_point and end_point based on the amount of time that has passed since the last update
+    //    float lerp_steps = 1 / distance;
+
+    //    for (float lerp = 0; lerp <= 1; lerp += lerp_steps) {
+    //        cur_position = Vector2.Lerp(start_point, end_point, lerp);
+    //        MarkPixelsToColour(cur_position, width, color);
+    //    }
+    //}
 
     public void MarkPixelsToColour(Vector2 center_pixel, int pen_thickness, Color color_of_pen) {
         // Figure out how many pixels we need to colour in each direction (x and y)
