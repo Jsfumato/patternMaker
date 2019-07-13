@@ -354,7 +354,12 @@ public class RuntimePalette : MonoBehaviour
         }
 
         //
-        foreach (var _p in m_List) {
+        while(true) {
+            if (m_List.Count <= 0)
+                break;
+
+            var _p = m_List.Dequeue();
+
             _array_pos = Mathf.RoundToInt(_p.y) * image.width + Mathf.RoundToInt(_p.x);
             _colors[_array_pos] = color;
 
@@ -376,5 +381,8 @@ public class RuntimePalette : MonoBehaviour
                 m_List.Enqueue(new Vector2());
             }
         }
+
+        myimage.SetPixels32(_colors);
+        myimage.Apply();
     }
 }
