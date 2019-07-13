@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class RuntimePalette : MonoBehaviour
 {
@@ -18,16 +19,14 @@ public class RuntimePalette : MonoBehaviour
     public Color drawcolor;
 
     // private
-    private int oldp;
+    private Vector2 oldp = Vector2.zero;
     private Texture2D myimage;
-    
-    private float mx;
-    private float my;
-
-    private int px;
-    private int py;
 
     private bool _init = false;
+    private List<List<Vector2>> _logs = new List<List<Vector2>>();
+    private List<Vector2> _currentLog = new List<Vector2>();
+
+    private Color32[] cur_colors;
 
     //
     private static RuntimePalette _palette;
@@ -138,8 +137,6 @@ public class RuntimePalette : MonoBehaviour
 
         var touchedPos = Utility.GetFakeTouch(Input.mousePosition).position;
 #endif
-        Debug.Log(touchedPos);
-
         Vector2 dir = new Vector2(rectTrans.position.x, rectTrans.position.y) - touchedPos;
 
         if (Mathf.Abs(dir.x) >= rectTrans.rect.width / 2)
@@ -148,46 +145,52 @@ public class RuntimePalette : MonoBehaviour
             return;
 
         //
-        px = Mathf.RoundToInt(rectTrans.rect.width * ((rectTrans.rect.width / 2 - dir.x) / rectTrans.rect.width));
-        py = Mathf.RoundToInt(rectTrans.rect.height * ((rectTrans.rect.height / 2 - dir.y) / rectTrans.rect.height));
+        int _px = Mathf.RoundToInt(rectTrans.rect.width * ((rectTrans.rect.width / 2 - dir.x) / rectTrans.rect.width));
+        int _py = Mathf.RoundToInt(rectTrans.rect.height * ((rectTrans.rect.height / 2 - dir.y) / rectTrans.rect.height));
+
+        int _oldX = Mathf.RoundToInt(oldp.x);
+        int _oldY = Mathf.RoundToInt(oldp.y);
 
         // <-- only draw when mouse moves for proficiency
-        if (px + py != oldp) {
-            oldp = px + py;
+        if (_px == _oldX && _py == _oldY)
+            return;
 
-            px += -Mathf.RoundToInt(brushSize * .5f);
-            py += -Mathf.RoundToInt(brushSize * .5f);
+        if (oldp == Vector2.zero)
+            oldp = new Vector2(_px, _py);
 
-            if (_mode == DrawMode.Draw)
-                Draw(px, py, drawcolor);
-            else if (_mode == DrawMode.Erase)
-                Erase(px, py);
-        }
+        _px += -Mathf.RoundToInt(brushSize * .5f);
+        _py += -Mathf.RoundToInt(brushSize * .5f);
+
+        if (_mode == DrawMode.Draw)
+            Draw(_px, _py, brushSize, drawcolor);
+        else if (_mode == DrawMode.Erase)
+            Erase(_px, _py);
+
+        //
+        _currentLog.Add(new Vector2(_px, _py));
     }
 
     public void OnPointerDown() {
         _touched = true;
+        _currentLog.Clear();
+
+        //
+        cur_colors = myimage.GetPixels32();
     }
 
     public void OnPointerUP() {
         _touched = false;
+        _logs.Add(_currentLog);
+        oldp = Vector2.zero;
+
+        //
+        myimage.SetPixels32(cur_colors);
+        myimage.Apply();
+
+        rawImg.texture = myimage;
     }
 
-    //public void OnClick() {
-    //    //Check if click was in outer circle
-    //    if (Vector2.Distance(rectTrans.position, Input.mousePosition) <= _width / 2 &&
-    //       Vector2.Distance(rectTrans.position, Input.mousePosition) >= halfSize - halfSize / 4) {
-    //        dragOuter = true;
-    //        return;
-    //        //Check if click was in inner box
-    //    } else if (Mathf.Abs(rectTrans.position.x - Input.mousePosition.x) <= halfSize / 2 &&
-    //              Mathf.Abs(RectTrans.position.y - Input.mousePosition.y) <= halfSize / 2) {
-    //        dragInner = truerectTrans
-    //        return;
-    //    }
-    //}
-
-    private void Draw(int px, int py, Color color) {
+    private void Draw(int px, int py, int width, Color color) {
         //
         int _widthIdx = 0;
         while (_widthIdx++ < brushSize) {
@@ -201,15 +204,66 @@ public class RuntimePalette : MonoBehaviour
                 if ((py + _heightIdx) <= -1 || (py + _heightIdx) >= myimage.height)
                     continue;
 
-                myimage.SetPixel(px + _widthIdx, py + _heightIdx, color);
+                //
+                //if (oldp == Vector2.zero)
+                //    myimage.SetPixel(px + _widthIdx, py + _heightIdx, color);
+                //else
+                ColourBetween(oldp, new Vector2(px, py), width, color);
+
+                //
+                oldp = new Vector2(px, py);
             }
         }
 
-        myimage.Apply();
-        rawImg.texture = myimage;
+
     }
 
     private void Erase(int px, int py) {
-        Draw(px, py, Color.white);
+        Draw(px, py, 10, Color.white);
+    }
+
+    //===========================================
+    public void ColourBetween(Vector2 start_point, Vector2 end_point, int width, Color color) {
+        // Get the distance from start to finish
+        float distance = Vector2.Distance(start_point, end_point);
+        Vector2 direction = (start_point - end_point).normalized;
+
+        Vector2 cur_position = start_point;
+
+        // Calculate how many times we should interpolate between start_point and end_point based on the amount of time that has passed since the last update
+        float lerp_steps = 1 / distance;
+
+        for (float lerp = 0; lerp <= 1; lerp += lerp_steps) {
+            cur_position = Vector2.Lerp(start_point, end_point, lerp);
+            MarkPixelsToColour(cur_position, width, color);
+        }
+    }
+
+    public void MarkPixelsToColour(Vector2 center_pixel, int pen_thickness, Color color_of_pen) {
+        // Figure out how many pixels we need to colour in each direction (x and y)
+        int center_x = (int)center_pixel.x;
+        int center_y = (int)center_pixel.y;
+        //int extra_radius = Mathf.Min(0, pen_thickness - 2);
+
+        for (int x = center_x - pen_thickness; x <= center_x + pen_thickness; x++) {
+            // Check if the X wraps around the image, so we don't draw pixels on the other side of the image
+            if (x >= (int)myimage.width || x < 0)
+                continue;
+
+            for (int y = center_y - pen_thickness; y <= center_y + pen_thickness; y++) {
+                MarkPixelToChange(x, y, color_of_pen);
+            }
+        }
+    }
+
+    public void MarkPixelToChange(int x, int y, Color color) {
+        // Need to transform x and y coordinates to flat coordinates of array
+        int array_pos = y * myimage.width + x;
+        
+        // Check if this is a valid position
+        if (array_pos > cur_colors.Length || array_pos < 0)
+            return;
+
+        cur_colors[array_pos] = color;
     }
 }
