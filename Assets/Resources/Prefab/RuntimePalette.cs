@@ -365,20 +365,20 @@ public class RuntimePalette : MonoBehaviour
 
             //
             //11.If the color of the node to the north of n is target-color, add that node to Q.
-            _newX = Mathf.RoundToInt(point.x);
-            _newY = Mathf.RoundToInt(point.y + 1);
+            _newX = Mathf.RoundToInt(_p.x);
+            _newY = Mathf.RoundToInt(_p.y + 1);
             _array_pos = _newY * image.width + _newX;
-            if (_array_pos < _colors.Length && _colors[_array_pos] != color) {
-                m_List.Enqueue(new Vector2());
+            if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
+                m_List.Enqueue(new Vector2(_newX, _newY));
             }
 
             //
             //12.If the color of the node to the south of n is target - color, add that node to Q.
-            _newX = Mathf.RoundToInt(point.x);
-            _newY = Mathf.RoundToInt(point.y - 1);
+            _newX = Mathf.RoundToInt(_p.x);
+            _newY = Mathf.RoundToInt(_p.y - 1);
             _array_pos = _newY * image.width + _newX;
-            if (_array_pos >= 0 && _colors[_array_pos] != color) {
-                m_List.Enqueue(new Vector2());
+            if (_array_pos >= 0 && _colors[_array_pos].Equals(_colToCompare)) {
+                m_List.Enqueue(new Vector2(_newX, _newY));
             }
         }
 
