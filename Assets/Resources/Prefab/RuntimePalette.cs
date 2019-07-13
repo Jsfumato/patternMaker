@@ -195,6 +195,11 @@ public class RuntimePalette : MonoBehaviour
     public void OnPointerUP() {
         _touched = false;
 
+        if (fillmode) {
+            fillmode = false;
+            return;
+        }
+
         //
         _logs.Add(_currentLog);
         if (_logs.Count > 20)
@@ -313,7 +318,7 @@ public class RuntimePalette : MonoBehaviour
 
         //
         var m_List = new Queue<Vector2>();
-        var m_WestEast = new List<int>();
+        var _check = new HashSet<int>();
 
         //
         //get pixel 1 to left (w) of Q[n]
@@ -324,52 +329,81 @@ public class RuntimePalette : MonoBehaviour
 
         //
         m_List.Enqueue(point);
+        _check.Add(_array_pos_base);
         var _colToCompare = _colors[_array_pos_base];
 
-        // east
-        var _array_pos = _array_pos_base;
-        int _newX = Mathf.RoundToInt(point.x);
-        int _newY = Mathf.RoundToInt(point.y);
-        while (++_newX <= image.width) {
-            _array_pos = _newY * image.width + _newX;
-            Color wCol = _colors[_array_pos];
-            if (wCol == _colToCompare) {
-                m_List.Enqueue(new Vector2(_newX, _newY));
-            } else {
-                break;
-            }
-        }
-        // west
-        _array_pos = _array_pos_base;
-        _newX = Mathf.RoundToInt(point.x);
-        _newY = Mathf.RoundToInt(point.y);
-        while (--_newX >= 0) {
-            _array_pos = _newY * image.width + _newX;
-            Color wCol = _colors[_array_pos];
-            if (wCol == _colToCompare) {
-                m_List.Enqueue(new Vector2(_newX, _newY));
-            } else {
-                break;
-            }
-        }
+        //// east
+        //var _array_pos = _array_pos_base;
+        //int _newX = Mathf.RoundToInt(point.x);
+        //int _newY = Mathf.RoundToInt(point.y);
+        //while (++_newX <= image.width) {
+        //    _array_pos = _newY * image.width + _newX;
+        //    Color wCol = _colors[_array_pos];
+        //    if (wCol == _colToCompare) {
+        //        m_List.Enqueue(new Vector2(_newX, _newY));
+        //        _check.Add(_array_pos);
+        //    } else {
+        //        break;
+        //    }
+        //}
+        //// west
+        //_array_pos = _array_pos_base;
+        //_newX = Mathf.RoundToInt(point.x);
+        //_newY = Mathf.RoundToInt(point.y);
+        //while (--_newX >= 0) {
+        //    _array_pos = _newY * image.width + _newX;
+        //    Color wCol = _colors[_array_pos];
+        //    if (wCol == _colToCompare) {
+        //        m_List.Enqueue(new Vector2(_newX, _newY));
+        //        _check.Add(_array_pos);
+        //    } else {
+        //        break;
+        //    }
+        //}
 
         //
-        while(true) {
+        while (true) {
             if (m_List.Count <= 0)
                 break;
 
             var _p = m_List.Dequeue();
 
-            _array_pos = Mathf.RoundToInt(_p.y) * image.width + Mathf.RoundToInt(_p.x);
+            var _array_pos = Mathf.RoundToInt(_p.y) * image.width + Mathf.RoundToInt(_p.x);
             _colors[_array_pos] = color;
+
+            //
+            // east
+            int _newX = Mathf.RoundToInt(_p.x + 1);
+            int _newY = Mathf.RoundToInt(_p.y);
+            _array_pos = _newY * image.width + _newX;
+            if (_newX <= image.width && !_check.Contains(_array_pos)) {
+                if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_array_pos);
+                }
+            }
+
+            // west
+            _newX = Mathf.RoundToInt(_p.x - 1);
+            _newY = Mathf.RoundToInt(_p.y);
+            _array_pos = _newY * image.width + _newX;
+            if (_newX >= 0 &&!_check.Contains(_array_pos)) {
+                if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_array_pos);
+                }
+            }
 
             //
             //11.If the color of the node to the north of n is target-color, add that node to Q.
             _newX = Mathf.RoundToInt(_p.x);
             _newY = Mathf.RoundToInt(_p.y + 1);
             _array_pos = _newY * image.width + _newX;
-            if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
-                m_List.Enqueue(new Vector2(_newX, _newY));
+            if (_newY <= image.height && !_check.Contains(_array_pos)) {
+                if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_array_pos);
+                }
             }
 
             //
@@ -377,11 +411,15 @@ public class RuntimePalette : MonoBehaviour
             _newX = Mathf.RoundToInt(_p.x);
             _newY = Mathf.RoundToInt(_p.y - 1);
             _array_pos = _newY * image.width + _newX;
-            if (_array_pos >= 0 && _colors[_array_pos].Equals(_colToCompare)) {
-                m_List.Enqueue(new Vector2(_newX, _newY));
+            if (_newY >= 0 && !_check.Contains(_array_pos)) {
+                if (_array_pos >= 0 && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_array_pos);
+                }
             }
         }
 
+        _check.Clear();
         myimage.SetPixels32(_colors);
         myimage.Apply();
     }
