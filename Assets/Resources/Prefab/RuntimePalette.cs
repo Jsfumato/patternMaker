@@ -38,7 +38,6 @@ public class RuntimePalette : MonoBehaviour
         if (_palette == null) {
             _palette = Utility.InstantiatePrefab<RuntimePalette>(EditTile.parentContent)
                 .GetComponent<RuntimePalette>();
-            _palette.Initialize();
         }
         return _palette;
     }
@@ -51,7 +50,7 @@ public class RuntimePalette : MonoBehaviour
 
     private DrawMode _mode;
 
-    public void Initialize() {
+    public void Initialize(int width, int height) {
         if (_init)
             return;
 
@@ -71,20 +70,7 @@ public class RuntimePalette : MonoBehaviour
         rectTrans.localPosition = Vector3.zero;
 
         //
-        int _widthIdx = original.width;
-        while (_widthIdx-- > 0) {
-            int _heightIdx = original.width;
-            while (_heightIdx-- > 0) {
-                myimage.SetPixel(
-                    _widthIdx, _heightIdx,
-                    original.GetPixel(_widthIdx, _heightIdx)
-                    );
-            }
-        }
-
-        //
-        myimage.Apply();
-        myimage.filterMode = FilterMode.Point;//<remove this if you want it more fuzzy
+        OnClear();
 
         //
         rawImg.texture = myimage;
@@ -93,7 +79,20 @@ public class RuntimePalette : MonoBehaviour
         _init = true;
     }
 
+    public void OnClear() {
+        var _colors = myimage.GetPixels32();
+
+        for (int i = 0; i < _colors.Length; ++i) {
+            _colors[i] = Color.white;
+        }
+
+        myimage.Apply();
+        myimage.filterMode = FilterMode.Point;//<remove this if you want it more fuzzy
+    }
+
     public void OnChangeCanvasSize(int width, int height) {
+        Initialize(width, height);
+
         myimage = new Texture2D(width, height);
         rectTrans.sizeDelta = new Vector2(width, height);
         rectTrans.pivot = Vector2.one * 0.5f;

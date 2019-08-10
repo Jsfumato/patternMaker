@@ -11,6 +11,7 @@ public class EditTile : MonoBehaviour {
 
     //
     public Transform _parentUI;
+    public Transform _uiStages;
     public Transform _parentContent;
 
     public void Awake() {
@@ -29,6 +30,9 @@ public class EditTile : MonoBehaviour {
                 RuntimePalette.Get().OnChangeCanvasSize(width, height);
             });
         }
+
+        //
+        _uiStages.gameObject.SetActive(false);
     }
 
     public void OnChangeBrush() {
@@ -38,5 +42,19 @@ public class EditTile : MonoBehaviour {
                 RuntimePalette.Get().OnChangeBrush(color, size);
             });
         }
+
+        //
+        _uiStages.gameObject.SetActive(false);
+    }
+
+    public void OnCreatePalette() {
+        RuntimePalette.Get().Initialize(640, 640);
+
+        //
+        _uiStages.gameObject.SetActive(false);
+    }
+
+    public void OnClearPalette() {
+        RuntimePalette.Get().OnClear();
     }
 }
