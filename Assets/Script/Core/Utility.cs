@@ -44,10 +44,11 @@ public class Utility : MonoBehaviour {
 
     // JSON
     // http://theeye.pe.kr/archives/2736
-    public Dictionary<JsonToken, object> ParseJSON(string path) {
+    public static Dictionary<JsonToken, object> ParseJSON(TextAsset textAsset) {
 
         // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함
-        using (StreamReader reader = new StreamReader(path)) {
+        // TODO: StreamReader 내의 MemoryStream도 자동으로 Dispose 되는지 확인 필요
+        using (StreamReader reader = new StreamReader(new MemoryStream(textAsset.bytes))) {
             Dictionary<JsonToken, object> map = new Dictionary<JsonToken, object>();
             JsonTextReader jsonReader = new JsonTextReader(reader);
 
