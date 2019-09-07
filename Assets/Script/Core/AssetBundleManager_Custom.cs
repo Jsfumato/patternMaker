@@ -4,9 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using CreativeSpore.RpgMapEditor;
-using SimpleJSON;
-using Nexon.Pub;
 using UnityEngine.Networking;
 
 public class AssetBundleManager_Custom : AssetBundleManager {
@@ -16,14 +13,14 @@ public class AssetBundleManager_Custom : AssetBundleManager {
     }
 
     private static List<string> GetDownloadableAssetBundleNames() {
-        if (CurrentServiceType.type == ServiceType.DEV)
-            return assetBundleNames;
+//        if (CurrentServiceType.type == ServiceType.DEV)
+//            return assetBundleNames;
 
-#if UNITY_IOS && !UNITY_EDITOR
-        return new List<string>() {
-            "Commons",
-        };
-#endif
+//#if UNITY_IOS && !UNITY_EDITOR
+//        return new List<string>() {
+//            "Commons",
+//        };
+//#endif
 
         return assetBundleNames;
     }

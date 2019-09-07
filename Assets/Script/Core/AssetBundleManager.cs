@@ -173,7 +173,6 @@ public abstract class AssetBundleManager : MonoBehaviour {
     //
     protected readonly List<AssetBundleInfo> assetBundles = new List<AssetBundleInfo>();
     protected uint _version;
-    public List<ServerGroupInfo> serverGroups = new List<ServerGroupInfo>();
     public bool loadedAll = false;
 
     public void UnloadCommonAssetBundle() {
