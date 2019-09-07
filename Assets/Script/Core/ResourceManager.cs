@@ -37,10 +37,10 @@ public class ResourceManager : MonoBehaviour {
 
     private void InitStages() {
         //
-        var map = Utility.ParseJSON("Stages.json");
+        var ta = Utility.LoadResource<TextAsset>("Stages.json");
+        var map = Utility.ParseJSON(ta);
         Resources.UnloadAsset(ta);
 
-        //var ta = Utility.LoadResource<TextAsset>("Stages.json");
         //var reader = Utility.Parse (new MemoryStream(ta.bytes));
         //reader.ReadToFollowing("Items");
 
@@ -111,9 +111,6 @@ public class ResourceManager : MonoBehaviour {
         //			// The AverageExecutionTimeInMilliseconds is a moving average over 10 frames, this negates the effects of warmup over time
         //			// To determine the real average just do total.TotalExecutionTimeInMilliseconds / total.TotalInvocationCount
         //		}
-
-        if (Constants.DEVELOPMENT_MODE || true)
-            Debug.Log(string.Format("Loaded {0} items.", items.Count));
     }
 
 
