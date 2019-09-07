@@ -41,7 +41,7 @@ public class Utility : MonoBehaviour {
         //
         return obj;
     }
-
+    
     // JSON
     // http://theeye.pe.kr/archives/2736
     public static Dictionary<JsonToken, object> ParseJSON(TextAsset textAsset) {
@@ -136,5 +136,30 @@ public class Utility : MonoBehaviour {
         }
 
         return (T) (object) obj;
+    }
+}
+
+public static class ExtensionMethod {
+
+    public static T GetSafe<T>(this T[] arr, int index, T _default = default(T)) {
+        if (index >= 0 && index < arr.Length)
+            return arr[index];
+        return _default;
+    }
+
+    public static void SetSafe<T>(this T[] arr, int index, T value = default(T)) {
+        if (index >= 0 && index < arr.Length)
+            arr[index] = value;
+    }
+
+    public static T GetSafe<T>(this IList<T> lst, int index, T _default = default(T)) {
+        if (index >= 0 && index < lst.Count)
+            return lst[index];
+        return _default;
+    }
+
+    public static void SetSafe<T>(this IList<T> lst, int index, T value = default(T)) {
+        if (index >= 0 && index < lst.Count)
+            lst[index] = value;
     }
 }

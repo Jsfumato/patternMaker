@@ -6,6 +6,16 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
+public static class CurrentServiceType {
+    public const string type = "stage";
+    public const string webURL = "http://stg-brm-web-alb-1226725381.ap-northeast-2.elb.amazonaws.com:9980/";
+    public const string updateURL_Prefix = "http://updates-kr.supercat.co.kr/kingdomwinds-stage/";
+    public const string updateOriginURL_Prefix = "http://updates-kr.supercat.co.kr/kingdomwinds-stage/";
+    public const string applicationIdentifier = "com.nexon.baram";
+
+}
+
+
 public class AssetBundleManager_Custom : AssetBundleManager {
     public override void Awake() {
 
@@ -38,12 +48,12 @@ public class AssetBundleManager_Custom : AssetBundleManager {
 
     public override void DownloadAll(ProgressCallback onProgress, DownloadCallback onFinish) {
         //
-        if (Config.ignoreAssetBundle) {
-            if (onFinish != null)
-                onFinish(true, null);
+        //if (Config.ignoreAssetBundle) {
+        //    if (onFinish != null)
+        //        onFinish(true, null);
 
-            return;
-        }
+        //    return;
+        //}
 
         StopAllCoroutines();
         StartCoroutine(Download(GetDownloadableAssetBundleNames(), onProgress, onFinish));
@@ -51,29 +61,29 @@ public class AssetBundleManager_Custom : AssetBundleManager {
 
     IEnumerator DownloadMeta(IEnumerable<string> names, StatusCallback onFinish) {
         //
-        if (Config.ignoreAssetBundle) {
-            if (onFinish != null)
-                onFinish(true, null, 0);
+        //if (Config.ignoreAssetBundle) {
+        //    if (onFinish != null)
+        //        onFinish(true, null, 0);
 
-            yield break;
-        }
+        //    yield break;
+        //}
 
         string postfix = "";
         string folder = "android/";
 
-        if (Constants.DEVELOPMENT_MODE) {
-#if UNITY_IPHONE
-			folder = "ios_beta";
-#elif UNITY_ANDROID
-			folder = "android_beta";
-#endif
-        } else {
+//        if (Constants.DEVELOPMENT_MODE) {
+//#if UNITY_IPHONE
+//			folder = "ios_beta";
+//#elif UNITY_ANDROID
+//			folder = "android_beta";
+//#endif
+//        } else {
 #if UNITY_IPHONE
 			folder = "ios";
 #elif UNITY_ANDROID
 			folder = "android";
 #endif
-        }
+        //}
 
         string url = null;
         long fileSize = 0;
@@ -114,19 +124,19 @@ public class AssetBundleManager_Custom : AssetBundleManager {
         string postfix = "";
         string folder = "android";
 
-        if (Constants.DEVELOPMENT_MODE) {
-#if UNITY_IPHONE
-			folder = "ios_beta";
-#elif UNITY_ANDROID
-			folder = "android_beta";
-#endif
-        } else {
+//        if (Constants.DEVELOPMENT_MODE) {
+//#if UNITY_IPHONE
+//			folder = "ios_beta";
+//#elif UNITY_ANDROID
+//			folder = "android_beta";
+//#endif
+//        } else {
 #if UNITY_IPHONE
 			folder = "ios";
 #elif UNITY_ANDROID
 			folder = "android";
 #endif
-        }
+        //}
 
         string url = null;
         long fileSize = 0;
