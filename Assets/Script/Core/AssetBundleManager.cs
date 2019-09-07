@@ -6,24 +6,14 @@ using System.Linq;
 using UnityEngine;
 
 public abstract class AssetBundleManager : MonoBehaviour {
-    // 암호화 키
-    public static readonly byte[] KEY = { 0x14, 0x92, 0x73, 0x05 };
 
     //
+    public delegate void StatusCallback(bool success, string message, long fileSize);
+    public delegate void DownloadCallback(bool success, string message);
+    public delegate void ProgressCallback(float v);
+
+    #region PersistentDataPath
     private static string[] _persistentDataPaths;
-    public static bool IsDirectoryWritable(string path) {
-        try {
-            if (!Directory.Exists(path))
-                return false;
-            string file = Path.Combine(path, Path.GetRandomFileName());
-            using (FileStream fs = File.Create(file, 1)) {
-            }
-            File.Delete(file);
-            return true;
-        } catch {
-            return false;
-        }
-    }
 
     private static string GetPersistentDataPath(params string[] components) {
         try {
@@ -101,10 +91,21 @@ public abstract class AssetBundleManager : MonoBehaviour {
             return persistentDataPaths.Length > 0 ? persistentDataPaths[0] : null;
         }
     }
+    #endregion
 
-    public delegate void StatusCallback(bool success, string message, long fileSize);
-    public delegate void DownloadCallback(bool success, string message);
-    public delegate void ProgressCallback(float v);
+    public static bool IsDirectoryWritable(string path) {
+        try {
+            if (!Directory.Exists(path))
+                return false;
+            string file = Path.Combine(path, Path.GetRandomFileName());
+            using (FileStream fs = File.Create(file, 1)) {
+            }
+            File.Delete(file);
+            return true;
+        } catch {
+            return false;
+        }
+    }
 
     //
     public static List<string> assetBundleNames = new List<string>() {
@@ -201,55 +202,7 @@ public abstract class AssetBundleManager : MonoBehaviour {
             onFinish(true, null, 0);
         }
     }
-
-    public void FetchServers(Action<bool, string> callback) {
-        //
-        StopAllCoroutines();
-        //StartCoroutine(_FetchServers(callback));
-        callback(true, null);
-    }
-
-    //private IEnumerator _FetchServers(Action<bool, string> callback) {
-    //    using (var www = new WWW(Config.webURL + "servers.php?sns_id={0}&t={1}".SFormat(MyGameManager.Get().GetSNSID(), UnityEngine.Random.value))) {
-    //        yield return www;
-
-    //        try {
-    //            var json = JSON.Parse(www.text) as JSONClass;
-
-    //            serverGroups.Clear();
-    //            foreach (JSONNode node in json["servers"].AsArray) {
-    //                var sgi = new ServerGroupInfo(node);
-    //                if (sgi.id <= 0) {
-    //                    // 로컬 서버
-    //                    // 로컬 테스트 일 경우, Config.fixHost or defaultHost 로 접속한다.
-    //                    if (Application.isEditor ||
-    //                        Constants.DEVELOPMENT_MODE) {
-    //                        sgi.host = Config.fixHost;
-
-    //                        Debug.Log(">>>>> sgi.host : " + sgi.host + " <- from Config.fixHost");
-    //                    }
-
-    //                    if (Application.isEditor ||
-    //                        Constants.DEVELOPMENT_MODE ||
-    //                        CurrentServiceType.type == ServiceType.DEV) {
-    //                        serverGroups.Add(sgi);
-    //                    }
-    //                } else {
-    //                    // 정식 서버
-    //                    serverGroups.Add(sgi);
-    //                }
-    //            }
-    //        } catch (Exception) {
-    //            Debug.LogWarning(www.error);
-    //            callback(false, "FetchServers failed. Please check your internet connection..");
-    //            yield break;
-    //        }
-    //    }
-
-    //    callback(true, null);
-
-    //}
-
+    
     public void LoadAll(Action<bool, string> _onFinish, ProgressCallback onProgress) {
 
         Action<bool> onFinish = delegate (bool success) {
