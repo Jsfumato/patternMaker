@@ -107,20 +107,8 @@ public abstract class AssetBundleManager : MonoBehaviour {
     public delegate void ProgressCallback(float v);
 
     //
-    public static List<string> assetBundleNames = new List<string>()
-    {
-        "AnimFX",
-        "Clans",
-        "Commons",
-        "FXs",
-        "Image",
-        "Items",
-        "MapObjects",
-        "MapPrefabs",
-        "Maps",
-        "Quests",
-        "Skills",
-        "Units",
+    public static List<string> assetBundleNames = new List<string>() {
+        "Stages"
     };
 
     //

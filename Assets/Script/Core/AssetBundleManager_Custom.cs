@@ -7,39 +7,19 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public static class CurrentServiceType {
-    public const string type = "stage";
-    public const string webURL = "http://stg-brm-web-alb-1226725381.ap-northeast-2.elb.amazonaws.com:9980/";
-    public const string updateURL_Prefix = "http://updates-kr.supercat.co.kr/kingdomwinds-stage/";
-    public const string updateOriginURL_Prefix = "http://updates-kr.supercat.co.kr/kingdomwinds-stage/";
-    public const string applicationIdentifier = "com.nexon.baram";
-
+    //public const string webURL = "http://stg-brm-web-alb-1226725381.ap-northeast-2.elb.amazonaws.com:9980/";
+    public const string updateURL_Prefix = "http://updates-kr.woorido.co.kr/drawingMatch/";
+    public const string applicationIdentifier = "com.woorido.drawingMatch";
 }
 
 
 public class AssetBundleManager_Custom : AssetBundleManager {
-    public override void Awake() {
-
-
-    }
-
-    private static List<string> GetDownloadableAssetBundleNames() {
-//        if (CurrentServiceType.type == ServiceType.DEV)
-//            return assetBundleNames;
-
-//#if UNITY_IOS && !UNITY_EDITOR
-//        return new List<string>() {
-//            "Commons",
-//        };
-//#endif
-
-        return assetBundleNames;
-    }
 
     public override void FetchStatus(StatusCallback onFinish, bool clearAssetBundles = true) {
         base.FetchStatus((bool success, string message, long fileSize) => {
             if (success) {
                 StopAllCoroutines();
-                StartCoroutine(DownloadMeta(GetDownloadableAssetBundleNames(), onFinish));
+                StartCoroutine(DownloadMeta(assetBundleNames, onFinish));
             } else {
                 onFinish(false, null, 0);
             }
@@ -56,7 +36,7 @@ public class AssetBundleManager_Custom : AssetBundleManager {
         //}
 
         StopAllCoroutines();
-        StartCoroutine(Download(GetDownloadableAssetBundleNames(), onProgress, onFinish));
+        StartCoroutine(Download(assetBundleNames, onProgress, onFinish));
     }
 
     IEnumerator DownloadMeta(IEnumerable<string> names, StatusCallback onFinish) {
