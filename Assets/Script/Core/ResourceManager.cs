@@ -15,6 +15,13 @@ public class ResourceManager : MonoBehaviour {
     const string PATCH_FOLDER_NAME = "Patches";
     const string DIR_PATCHES = "Assets/" + PATCH_FOLDER_NAME + "/";
 
+    public static ResourceManager Get() {
+        if (singleton == null)
+            singleton = new ResourceManager();
+
+        return singleton;
+    }
+
     public void Reload() {
         if (singleton == null)
             singleton = new ResourceManager();

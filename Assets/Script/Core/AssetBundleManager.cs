@@ -217,49 +217,50 @@ public abstract class AssetBundleManager : MonoBehaviour {
     public void FetchServers(Action<bool, string> callback) {
         //
         StopAllCoroutines();
-        StartCoroutine(_FetchServers(callback));
-    }
-
-    private IEnumerator _FetchServers(Action<bool, string> callback) {
-        using (var www = new WWW(Config.webURL + "servers.php?sns_id={0}&t={1}".SFormat(MyGameManager.Get().GetSNSID(), UnityEngine.Random.value))) {
-            yield return www;
-
-            try {
-                var json = JSON.Parse(www.text) as JSONClass;
-
-                serverGroups.Clear();
-                foreach (JSONNode node in json["servers"].AsArray) {
-                    var sgi = new ServerGroupInfo(node);
-                    if (sgi.id <= 0) {
-                        // 로컬 서버
-                        // 로컬 테스트 일 경우, Config.fixHost or defaultHost 로 접속한다.
-                        if (Application.isEditor ||
-                            Constants.DEVELOPMENT_MODE) {
-                            sgi.host = Config.fixHost;
-
-                            Debug.Log(">>>>> sgi.host : " + sgi.host + " <- from Config.fixHost");
-                        }
-
-                        if (Application.isEditor ||
-                            Constants.DEVELOPMENT_MODE ||
-                            CurrentServiceType.type == ServiceType.DEV) {
-                            serverGroups.Add(sgi);
-                        }
-                    } else {
-                        // 정식 서버
-                        serverGroups.Add(sgi);
-                    }
-                }
-            } catch (Exception) {
-                Debug.LogWarning(www.error);
-                callback(false, "FetchServers failed. Please check your internet connection..");
-                yield break;
-            }
-        }
-
+        //StartCoroutine(_FetchServers(callback));
         callback(true, null);
-
     }
+
+    //private IEnumerator _FetchServers(Action<bool, string> callback) {
+    //    using (var www = new WWW(Config.webURL + "servers.php?sns_id={0}&t={1}".SFormat(MyGameManager.Get().GetSNSID(), UnityEngine.Random.value))) {
+    //        yield return www;
+
+    //        try {
+    //            var json = JSON.Parse(www.text) as JSONClass;
+
+    //            serverGroups.Clear();
+    //            foreach (JSONNode node in json["servers"].AsArray) {
+    //                var sgi = new ServerGroupInfo(node);
+    //                if (sgi.id <= 0) {
+    //                    // 로컬 서버
+    //                    // 로컬 테스트 일 경우, Config.fixHost or defaultHost 로 접속한다.
+    //                    if (Application.isEditor ||
+    //                        Constants.DEVELOPMENT_MODE) {
+    //                        sgi.host = Config.fixHost;
+
+    //                        Debug.Log(">>>>> sgi.host : " + sgi.host + " <- from Config.fixHost");
+    //                    }
+
+    //                    if (Application.isEditor ||
+    //                        Constants.DEVELOPMENT_MODE ||
+    //                        CurrentServiceType.type == ServiceType.DEV) {
+    //                        serverGroups.Add(sgi);
+    //                    }
+    //                } else {
+    //                    // 정식 서버
+    //                    serverGroups.Add(sgi);
+    //                }
+    //            }
+    //        } catch (Exception) {
+    //            Debug.LogWarning(www.error);
+    //            callback(false, "FetchServers failed. Please check your internet connection..");
+    //            yield break;
+    //        }
+    //    }
+
+    //    callback(true, null);
+
+    //}
 
     public void LoadAll(Action<bool, string> _onFinish, ProgressCallback onProgress) {
 
@@ -273,13 +274,7 @@ public abstract class AssetBundleManager : MonoBehaviour {
 
             //
             try {
-                Localizer.Get().Initialize();
-                ResourceManager.Reload();
-                BadWordFilter.Init();
-                ValidNameFilter.Init();
-                GameData.Reload();
-                ContinuousPlacement.Get().Reload();
-                StatCalculator.Reload();
+                ResourceManager.Get().Initialize();
 
                 //
                 UnloadCommonAssetBundle();
@@ -297,13 +292,13 @@ public abstract class AssetBundleManager : MonoBehaviour {
             return;
         };
 
-        //
-        if (Config.ignoreAssetBundle) {
-            if (onFinish != null)
-                onFinish(true);
+        ////
+        //if (Config.ignoreAssetBundle) {
+        //    if (onFinish != null)
+        //        onFinish(true);
 
-            return;
-        }
+        //    return;
+        //}
 
         //
         StartCoroutine(
@@ -335,14 +330,14 @@ public abstract class AssetBundleManager : MonoBehaviour {
             Stream stream = null;
             AssetBundleCreateRequest req = null;
 
-            // 일단 StreamingAssets 폴더에서 가져오기를 시도한다.
-            try {
-                string path = Path.Combine(Application.streamingAssetsPath, "AssetBundles/" + name + ".unity3d");
+            //// 일단 StreamingAssets 폴더에서 가져오기를 시도한다.
+            //try {
+            //    string path = Path.Combine(Application.streamingAssetsPath, "AssetBundles/" + name + ".unity3d");
 
-                stream = new XorStream(new FileStream(path, FileMode.Open, FileAccess.Read), KEY);
-                req = AssetBundle.LoadFromStreamAsync(stream);
-            } catch {
-            }
+            //    stream = new XorStream(new FileStream(path, FileMode.Open, FileAccess.Read), KEY);
+            //    req = AssetBundle.LoadFromStreamAsync(stream);
+            //} catch {
+            //}
 
             // 로딩 시도!
             if (req != null)
@@ -360,15 +355,15 @@ public abstract class AssetBundleManager : MonoBehaviour {
 
                 }
 
-                // persistentDataPath 폴더에서 가져오기를 시도한다.
-                try {
-                    string path = this is AssetBundleManager_NXPatcher ? NXPatcher.GetFilePath(name + ".unity3d")
-                        : Path.Combine(persistentDataPath, name + ".unity3d");
+                //// persistentDataPath 폴더에서 가져오기를 시도한다.
+                //try {
+                //    string path = this is AssetBundleManager_NXPatcher ? NXPatcher.GetFilePath(name + ".unity3d")
+                //        : Path.Combine(persistentDataPath, name + ".unity3d");
 
-                    stream = new XorStream(new FileStream(path, FileMode.Open, FileAccess.Read), KEY);
-                    req = AssetBundle.LoadFromStreamAsync(stream);
-                } catch {
-                }
+                //    stream = new XorStream(new FileStream(path, FileMode.Open, FileAccess.Read), KEY);
+                //    req = AssetBundle.LoadFromStreamAsync(stream);
+                //} catch {
+                //}
 
                 // 로딩 시도!
                 if (req != null)
