@@ -44,24 +44,33 @@ public class Utility : MonoBehaviour {
     
     // JSON
     // http://theeye.pe.kr/archives/2736
-    public static Dictionary<JsonToken, object> ParseJSON(TextAsset textAsset) {
+    public static Dictionary<string, object> ParseJSONfromTextAsset(TextAsset textAsset) {
 
         // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함
         // TODO: StreamReader 내의 MemoryStream도 자동으로 Dispose 되는지 확인 필요
         using (StreamReader reader = new StreamReader(new MemoryStream(textAsset.bytes))) {
-            Dictionary<JsonToken, object> map = new Dictionary<JsonToken, object>();
+            Dictionary<string, object> map = new Dictionary<string, object>();
             JsonTextReader jsonReader = new JsonTextReader(reader);
 
+            //
+            string _lastPropertyName = null;
             while (jsonReader.Read()) {
+                if (jsonReader.Value == null)
+                    continue;
+
+                //
                 if (jsonReader.Value != null) {
-                    Debug.LogFormat("Token: {0}, Value: {1}", jsonReader.TokenType, jsonReader.Value);
-                    map.Add(jsonReader.TokenType, jsonReader.Value);
-                } else {
-                    Debug.LogFormat("Token: {0}", jsonReader.TokenType);
-                    map.Add(jsonReader.TokenType, null);
+                    if (jsonReader.TokenType == JsonToken.PropertyName) {
+                        _lastPropertyName = jsonReader.Value.ToString();
+                        if (!map.ContainsKey(_lastPropertyName))
+                            map.Add(_lastPropertyName, null);
+                    } else {
+                        map.Add(_lastPropertyName, jsonReader.Value.ToString());
+                    }
                 }
             }
 
+            //
             return map;
         }
     }

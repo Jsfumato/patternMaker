@@ -22,30 +22,18 @@ public class ResourceManager : MonoBehaviour {
         return singleton;
     }
 
-    public void Reload() {
-        if (singleton == null)
-            singleton = new ResourceManager();
-
-        //
-        if (!singleton.inited) {
-            singleton.Initialize();
-        }
-
-        ////
-        //System.GC.Collect();
-    }
-
     public void Initialize() {
-        //
+        if (singleton.inited)
+            return;
 
-        //
+        InitStages();
         singleton.inited = true;
     }
 
     private void InitStages() {
         //
         var ta = Utility.LoadResource<TextAsset>("Stages.json");
-        var map = Utility.ParseJSON(ta);
+        var map = Utility.ParseJSONfromTextAsset(ta);
         Resources.UnloadAsset(ta);
 
         //var reader = Utility.Parse (new MemoryStream(ta.bytes));
@@ -118,14 +106,5 @@ public class ResourceManager : MonoBehaviour {
         //			// The AverageExecutionTimeInMilliseconds is a moving average over 10 frames, this negates the effects of warmup over time
         //			// To determine the real average just do total.TotalExecutionTimeInMilliseconds / total.TotalInvocationCount
         //		}
-    }
-
-
-    // called second
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        Debug.Log("OnSceneLoaded: " + scene.name);
-        Debug.Log(mode);
-
-        Initialize();
     }
 }
