@@ -26,6 +26,7 @@ public class ResourceManager : MonoBehaviour {
         if (singleton.inited)
             return;
 
+        //
         InitStages();
         singleton.inited = true;
     }

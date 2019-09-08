@@ -310,6 +310,11 @@ public class RuntimePalette : MonoBehaviour
     }
 
     //===================================================
+    public byte[] SaveAsBytes() {
+        return myimage.GetRawTextureData();
+    }
+
+    //===================================================
     void FloodFill(Texture2D image, Vector2 point, Color color) {
         Color32[] _colors = image.GetPixels32();
 

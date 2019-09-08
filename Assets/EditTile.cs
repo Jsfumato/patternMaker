@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public class EditTile : MonoBehaviour {
 
@@ -56,5 +57,18 @@ public class EditTile : MonoBehaviour {
 
     public void OnClearPalette() {
         RuntimePalette.Get().OnClear();
+    }
+
+    public void OnSavePalette() {
+
+        // 
+        var popup = Utility.InstantiatePrefab<Popup_InputText>(parentUI);
+        if (popup.GetComponent<Popup_InputText>() != null) {
+            popup.GetComponent<Popup_InputText>().Initialize((name) => {
+                
+                JsonUtility.
+
+            }, RuntimePalette.Get().SaveAsBytes());
+        }
     }
 }
