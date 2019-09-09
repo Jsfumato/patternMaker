@@ -45,6 +45,8 @@ public class Utility : MonoBehaviour {
     // JSON
     // http://theeye.pe.kr/archives/2736
     public static Dictionary<string, object> ParseJSONfromTextAsset(TextAsset textAsset) {
+        if (textAsset == null)
+            return new Dictionary<string, object>();
 
         // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함
         // TODO: StreamReader 내의 MemoryStream도 자동으로 Dispose 되는지 확인 필요
@@ -79,7 +81,7 @@ public class Utility : MonoBehaviour {
         if (mapToSave == null)
             return false;
 
-        string path = string.Format("Assets/Resources/{0}.json", fileName);
+        string path = string.Format("Assets/Resources/Custom/{0}.json", fileName);
 
         try {
             // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함
@@ -113,6 +115,82 @@ public class Utility : MonoBehaviour {
     }
 
     private static UTF8Encoding utf8Encoding = new UTF8Encoding(true);
+
+    // https://3dmpengines.tistory.com/1745
+    public static List<string> GetFileNamesAtPath(string path) {
+
+        List<string> result = new List<string>();
+        string[] fileEntries = Directory.GetFiles(Application.dataPath + "/" + path);
+        foreach (var filename in fileEntries) {
+            //
+            if (filename.ToLower().Contains(".meta".ToLower()))
+                continue;
+
+            var filename_raw = filename.Replace('\\', '/');
+            var str = filename_raw.Split('/');
+            filename_raw = str.GetSafe(str.Length - 1);
+            Debug.Log(filename_raw);
+            result.Add(filename_raw);
+        }
+
+        return result;
+    }
+
+    //public static T[] GetAtPath<T>(string path) {
+
+    //    ArrayList al = new ArrayList();
+    //    string[] fileEntries = Directory.GetFiles(Application.dataPath + "/" + path);
+
+    //    //
+    //    Debug.Log(fileEntries);
+
+    //    //
+    //    foreach (string fileName in fileEntries) {
+    //        int assetPathIndex = fileName.IndexOf("Assets");
+    //        string localPath = fileName.Substring(assetPathIndex);
+
+    //        UnityEngine.Object t = AssetDatabase.LoadAssetAtPath(localPath, typeof(T));
+    //        if (t != null)
+    //            al.Add(t);
+    //    }
+    //    T[] result = new T[al.Count];
+    //    for (int i = 0; i < al.Count; i++)
+    //        result[i] = (T)al[i];
+
+    //    return result;
+    //}
+
+
+    //    public static List<string> GetPatchFileNames(string path) {
+    //#if UNITY_EDITOR && !UNITY_WEBPLAYER
+    //        if (Application.isEditor || !Application.isPlaying)
+    //            obj = AssetDatabase.get("Assets/Patches/" + path, archivedType);
+
+    //#elif UNITY_STANDALONE_WIN
+    //        if(!path.StartsWith("/")) {
+    //#if UNITY_EDITOR
+    //            path = Path.Combine(Path.Combine(Application.dataPath, "PatchResources/"), path);
+    //#else
+    //            path = Path.Combine(Path.Combine(Application.dataPath, "../Client/Assets/PatchResources/"), path);
+    //#endif
+    //        }
+
+    //        var www = new WWW("file://" + path);
+    //        CoroutineManager.Get().StartCoroutine(PerformLoadResource(www, type));
+    //        while (!www.isDone) {}
+
+    //        if (type == typeof(byte[]))
+    //            obj = www.bytes;
+    //        else if (type == typeof(string))
+    //            obj = www.text.Replace("\ufeff", "");
+    //        else if (type == typeof(Texture2D))
+    //            obj = www.texture;
+    ////        else if (type == typeof(AudioClip))
+    ////			obj = www.audioClip;
+    //#endif
+
+    //    }
+
     public static T LoadResource<T>(string path) {
         object obj = null;
         Type type = typeof(T);
@@ -123,7 +201,7 @@ public class Utility : MonoBehaviour {
 
 #if UNITY_EDITOR && !UNITY_WEBPLAYER
         if (Application.isEditor || !Application.isPlaying)
-            obj = AssetDatabase.LoadAssetAtPath("Assets/PatchResources/" + path, archivedType);
+            obj = AssetDatabase.LoadAssetAtPath("Assets/Patches/" + path, archivedType);
 
 #elif UNITY_STANDALONE_WIN
         if(!path.StartsWith("/")) {

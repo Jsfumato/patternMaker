@@ -15,6 +15,9 @@ public class EditTile : MonoBehaviour {
     public Transform _uiStages;
     public Transform _parentContent;
 
+    //
+    public UIDynamicTableView table;
+
     public void Awake() {
         //
         parentUI = _parentUI;
@@ -22,6 +25,11 @@ public class EditTile : MonoBehaviour {
 
         //
         _runtimePalette = RuntimePalette.Get();
+
+        //
+        ResourceManager.Get().Initialize();
+
+        //table.Initialize(ResourceManager.Get().stages.Count, );
     }
 
     public void OnChangeCanvas() {

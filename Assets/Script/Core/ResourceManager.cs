@@ -11,9 +11,11 @@ public class ResourceManager : MonoBehaviour {
 
     private static ResourceManager singleton = new ResourceManager();
     private bool inited = false;
-
     const string PATCH_FOLDER_NAME = "Patches";
     const string DIR_PATCHES = "Assets/" + PATCH_FOLDER_NAME + "/";
+
+    //
+    public readonly List<ResourceStage> stages = new List<ResourceStage>();
 
     public static ResourceManager Get() {
         if (singleton == null)
@@ -33,9 +35,22 @@ public class ResourceManager : MonoBehaviour {
 
     private void InitStages() {
         //
-        var ta = Utility.LoadResource<TextAsset>("Stages.json");
-        var map = Utility.ParseJSONfromTextAsset(ta);
-        Resources.UnloadAsset(ta);
+        stages.Clear();
+
+        //
+        foreach (string textAssetName in Utility.GetFileNamesAtPath("Patches/Stages")) {
+            var ta = Utility.LoadResource<TextAsset>("Stages.json");
+            var map = Utility.ParseJSONfromTextAsset(ta);
+
+            //
+            stages.Add(new ResourceStage(map));
+
+            //
+            Resources.UnloadAsset(ta);
+        }
+
+        //
+        Debug.Log(stages.Count);
 
         //var reader = Utility.Parse (new MemoryStream(ta.bytes));
         //reader.ReadToFollowing("Items");
