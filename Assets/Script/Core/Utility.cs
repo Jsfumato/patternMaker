@@ -75,35 +75,36 @@ public class Utility : MonoBehaviour {
         }
     }
 
-    public static bool ToJSON(Dictionary<string, object> mapToSave) {
+    public static bool ToJSONfile(string fileName, Dictionary<string, object> mapToSave) {
+        if (mapToSave == null)
+            return false;
 
-        // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함
-        // TODO: StreamReader 내의 MemoryStream도 자동으로 Dispose 되는지 확인 필요
-        using (StreamReader reader = new StreamReader(new MemoryStream(textAsset.bytes))) {
-            Dictionary<string, object> map = new Dictionary<string, object>();
-            JsonTextReader jsonReader = new JsonTextReader(reader);
+        string path = string.Format("Assets/Resources/{0}.json", fileName);
 
-            //
-            string _lastPropertyName = null;
-            while (jsonReader.Read()) {
-                if (jsonReader.Value == null)
-                    continue;
+        try {
+            // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함
+            // TODO: StreamReader 내의 MemoryStream도 자동으로 Dispose 되는지 확인 필요
+            using (StreamWriter writer = new StreamWriter(path)) {
+                Dictionary<string, object> map = new Dictionary<string, object>();
+                JsonTextWriter jsonWriter = new JsonTextWriter(writer);
 
                 //
-                if (jsonReader.Value != null) {
-                    if (jsonReader.TokenType == JsonToken.PropertyName) {
-                        _lastPropertyName = jsonReader.Value.ToString();
-                        if (!map.ContainsKey(_lastPropertyName))
-                            map.Add(_lastPropertyName, null);
-                    } else {
-                        map.Add(_lastPropertyName, jsonReader.Value.ToString());
-                    }
+                jsonWriter.WriteStartObject();
+                foreach (var entry in mapToSave) {
+                    jsonWriter.WritePropertyName(entry.Key);
+                    jsonWriter.WriteValue(entry.Value);
                 }
+                jsonWriter.WriteEndObject();
             }
-
-            //
-            return map;
+        } catch {
+            // 저장에 실패하면 false 반환
+            return false;
         }
+
+        //Re-import the file to update the reference in the editor
+        AssetDatabase.ImportAsset(path);
+
+        return true;
     }
 
     // AssetBundle Manager

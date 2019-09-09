@@ -60,14 +60,18 @@ public class EditTile : MonoBehaviour {
     }
 
     public void OnSavePalette() {
-
         // 
         var popup = Utility.InstantiatePrefab<Popup_InputText>(parentUI);
         if (popup.GetComponent<Popup_InputText>() != null) {
-            popup.GetComponent<Popup_InputText>().Initialize((name) => {
-                
-                JsonUtility.
+            popup.GetComponent<Popup_InputText>().Initialize((name, bytes) => {
 
+                //
+                Dictionary<string, object> map = new Dictionary<string, object>();
+                map.Add("name", name);
+                map.Add("bytes", bytes);
+
+                //
+                Utility.ToJSONfile(name, map);
             }, RuntimePalette.Get().SaveAsBytes());
         }
     }
