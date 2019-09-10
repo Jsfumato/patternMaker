@@ -23,6 +23,7 @@ public class RuntimePalette : MonoBehaviour
     // private
     private Vector2 oldp = Vector2.zero;
     private Texture2D myimage;
+    public Texture2D myImage { get { return myimage; } }
 
     private bool _init = false;
     private List<List<Vector2>> _logs = new List<List<Vector2>>();
@@ -93,7 +94,7 @@ public class RuntimePalette : MonoBehaviour
     public void OnChangeCanvasSize(int width, int height) {
         Initialize(width, height);
 
-        myimage = new Texture2D(width, height);
+        myimage = new Texture2D(width, height, TextureFormat.RGBA32, false);
         rectTrans.sizeDelta = new Vector2(width, height);
         rectTrans.pivot = Vector2.one * 0.5f;
         rectTrans.localPosition = Vector3.zero;
@@ -306,12 +307,26 @@ public class RuntimePalette : MonoBehaviour
         if (array_pos > cur_colors.Length || array_pos < 0)
             return;
 
+        if (array_pos < 0 || array_pos >= cur_colors.Length)
+            return;
+
         cur_colors[array_pos] = color;
     }
 
     //===================================================
     public byte[] SaveAsBytes() {
-        return myimage.GetRawTextureData();
+        var bytes = myimage.GetRawTextureData();
+
+        //
+        var toString = System.Text.Encoding.Unicode.GetString(bytes);
+        var des = System.Text.Encoding.Unicode.GetBytes(toString);
+
+        //bytes = System.Text.Encoding.UTF8.GetBytes(bytes.ToString());
+        myimage.LoadRawTextureData(des);
+        myimage.Apply();
+
+        //
+        return bytes;
     }
 
     //===================================================

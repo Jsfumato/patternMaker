@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Reflection;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -67,7 +69,7 @@ public class Utility : MonoBehaviour {
                         if (!map.ContainsKey(_lastPropertyName))
                             map.Add(_lastPropertyName, null);
                     } else {
-                        map[_lastPropertyName] = jsonReader.Value.ToString();
+                        map[_lastPropertyName] = jsonReader.Value;
                     }
                 }
             }
@@ -107,6 +109,53 @@ public class Utility : MonoBehaviour {
         AssetDatabase.ImportAsset(path);
 
         return true;
+    }
+
+    public static byte[] ToByteArray<T>(T obj) {
+        if (obj == null)
+            return null;
+        BinaryFormatter bf = new BinaryFormatter();
+        using (MemoryStream ms = new MemoryStream()) {
+            bf.Serialize(ms, obj);
+            return ms.ToArray();
+        }
+    }
+
+    public static T FromByteArray<T>(byte[] data) {
+        if (data == null)
+            return default(T);
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Binder = new AllowAllAssemblyVersionsDeserializationBinder();
+
+        using (MemoryStream ms = new MemoryStream(data)) {
+            object obj = bf.Deserialize(ms);
+            return (T)obj;
+        }
+    }
+
+    public static object ObjectFromByteArray(byte[] data) {
+        if (data == null)
+            return null;
+        BinaryFormatter bf = new BinaryFormatter();
+        using (MemoryStream ms = new MemoryStream(data)) {
+            return bf.Deserialize(ms);
+        }
+    }
+
+    sealed class AllowAllAssemblyVersionsDeserializationBinder : System.Runtime.Serialization.SerializationBinder
+    {
+        public override Type BindToType(string assemblyName, string typeName) {
+            String currentAssembly = Assembly.GetExecutingAssembly().FullName;
+
+            // In this case we are always using the current assembly
+            assemblyName = currentAssembly;
+
+            // Get the type using the typeName and assemblyName
+            Type typeToDeserialize = Type.GetType(String.Format("{0}, {1}",
+                typeName, assemblyName));
+
+            return typeToDeserialize;
+        }
     }
 
     // AssetBundle Manager

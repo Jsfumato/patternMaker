@@ -22,8 +22,11 @@ public class ResourceStage : ResourceBase {
 
         //
         if (jsonRaw.ContainsKey("bytes")) {
-            bytes = Encoding.UTF8.GetBytes(jsonRaw["bytes"].ToString());
+            bytes = Encoding.Unicode.GetBytes(jsonRaw["bytes"].ToString());
         }
+        //if (jsonRaw.ContainsKey("bytes")) {
+        //    bytes = Utility.ToByteArray(jsonRaw["bytes"]);
+        //}
 
         if (jsonRaw.ContainsKey("width")) {
             width = int.Parse(jsonRaw["width"].ToString());

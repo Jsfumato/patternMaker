@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.UI;
+using System.Text;
 
 public class EditTile : MonoBehaviour {
 
@@ -46,7 +47,8 @@ public class EditTile : MonoBehaviour {
             stageInfo.txtName.text = stage.name;
             stageInfo.texture = new Texture2D(stage.width, stage.height, TextureFormat.RGBA32, false);
             stageInfo.texture.LoadRawTextureData(stage.bytes);
-            stageInfo.image.material.mainTexture = stageInfo.texture;
+            stageInfo.texture.Apply();
+
             stageInfo.rawImage.texture = stageInfo.texture;
 
             //
@@ -99,13 +101,13 @@ public class EditTile : MonoBehaviour {
                 //
                 Dictionary<string, object> map = new Dictionary<string, object>();
                 map.Add("name", name);
-                map.Add("bytes", bytes);
+                map.Add("bytes", Encoding.Unicode.GetString(bytes));
                 map.Add("width", width);
                 map.Add("height", height);
 
                 //
                 Utility.ToJSONfile(name, map);
-            }, RuntimePalette.Get().SaveAsBytes(), RuntimePalette.Get().width, RuntimePalette.Get().height);
+            }, RuntimePalette.Get().SaveAsBytes(), RuntimePalette.Get().myImage.width, RuntimePalette.Get().myImage.height);
         }
     }
 }
