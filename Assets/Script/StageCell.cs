@@ -8,4 +8,5 @@ public class StageCell : MonoBehaviour {
     public Text txtName;
     public Texture2D texture;
     public Image image;
+    public RawImage rawImage;
 }

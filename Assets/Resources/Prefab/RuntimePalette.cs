@@ -55,7 +55,7 @@ public class RuntimePalette : MonoBehaviour
             return;
 
         if (original == null) {
-            original = new Texture2D(width, height);
+            original = new Texture2D(width, height, TextureFormat.RGBA32, false);
         }
 
         // change these next three variables to whatever you want!!!
@@ -64,7 +64,7 @@ public class RuntimePalette : MonoBehaviour
         eraseSize = 20;
 
         //copy our original into our new paintable image 
-        myimage = new Texture2D(original.width, original.height);
+        myimage = new Texture2D(original.width, original.height, TextureFormat.RGBA32, false);
         rectTrans.sizeDelta = new Vector2(original.width, original.height);
         rectTrans.pivot = Vector2.one * 0.5f;
         rectTrans.localPosition = Vector3.zero;

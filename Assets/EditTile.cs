@@ -44,9 +44,10 @@ public class EditTile : MonoBehaviour {
 
             //
             stageInfo.txtName.text = stage.name;
-            stageInfo.texture = new Texture2D(stage.width, stage.height);
-            if (stageInfo.texture.LoadImage(stage.bytes))
-                stageInfo.image.material.mainTexture = stageInfo.texture;
+            stageInfo.texture = new Texture2D(stage.width, stage.height, TextureFormat.RGBA32, false);
+            stageInfo.texture.LoadRawTextureData(stage.bytes);
+            stageInfo.image.material.mainTexture = stageInfo.texture;
+            stageInfo.rawImage.texture = stageInfo.texture;
 
             //
             cloned.transform.SetParent(table.transform);
