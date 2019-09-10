@@ -10,6 +10,9 @@ public class ResourceStage : ResourceBase {
     //
     public new string name;
     public byte[] bytes;
+    public int width;
+    public int height;
+
 
     public ResourceStage(Dictionary<string, object> jsonRaw) : base() {
         //
@@ -20,6 +23,13 @@ public class ResourceStage : ResourceBase {
         //
         if (jsonRaw.ContainsKey("bytes")) {
             bytes = Encoding.UTF8.GetBytes(jsonRaw["bytes"].ToString());
+        }
+
+        if (jsonRaw.ContainsKey("width")) {
+            width = int.Parse(jsonRaw["width"].ToString());
+        }
+        if (jsonRaw.ContainsKey("height")) {
+            height = int.Parse(jsonRaw["height"].ToString());
         }
     }
 }

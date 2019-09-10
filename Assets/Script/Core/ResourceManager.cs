@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using UnityEditor;
 #endif
 
-public class ResourceManager : MonoBehaviour {
+public class ResourceManager {
 
     private static ResourceManager singleton = new ResourceManager();
     private bool inited = false;
@@ -15,7 +15,11 @@ public class ResourceManager : MonoBehaviour {
     const string DIR_PATCHES = "Assets/" + PATCH_FOLDER_NAME + "/";
 
     //
-    public readonly List<ResourceStage> stages = new List<ResourceStage>();
+    private List<ResourceStage> stages = new List<ResourceStage>();
+
+    public List<ResourceStage> GetStages() {
+        return stages;
+    }
 
     public static ResourceManager Get() {
         if (singleton == null)
@@ -34,12 +38,13 @@ public class ResourceManager : MonoBehaviour {
     }
 
     private void InitStages() {
+
         //
         stages.Clear();
 
         //
         foreach (string textAssetName in Utility.GetFileNamesAtPath("Patches/Stages")) {
-            var ta = Utility.LoadResource<TextAsset>("Stages.json");
+            var ta = Utility.LoadResource<TextAsset>(textAssetName);
             var map = Utility.ParseJSONfromTextAsset(ta);
 
             //

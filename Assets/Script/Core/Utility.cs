@@ -67,7 +67,7 @@ public class Utility : MonoBehaviour {
                         if (!map.ContainsKey(_lastPropertyName))
                             map.Add(_lastPropertyName, null);
                     } else {
-                        map.Add(_lastPropertyName, jsonReader.Value.ToString());
+                        map[_lastPropertyName] = jsonReader.Value.ToString();
                     }
                 }
             }
@@ -201,7 +201,7 @@ public class Utility : MonoBehaviour {
 
 #if UNITY_EDITOR && !UNITY_WEBPLAYER
         if (Application.isEditor || !Application.isPlaying)
-            obj = AssetDatabase.LoadAssetAtPath("Assets/Patches/" + path, archivedType);
+            obj = AssetDatabase.LoadAssetAtPath("Assets/Patches/Stages/" + path, archivedType);
 
 #elif UNITY_STANDALONE_WIN
         if(!path.StartsWith("/")) {
