@@ -27,12 +27,11 @@ public class LobbyManager : MonoBehaviour{
     public void Initialize() {
         //
         _seqHideAll = DOTween.Sequence()
-            .Append(title.DOLocalMoveY(500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectStart.DOLocalMoveY(-500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectStage.DOLocalMoveY(-500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectSetting.DOLocalMoveY(-500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectMode.DOLocalMoveY(-500f, 2.0f).SetEase(Ease.InOutCirc))
-            .SetDelay(3f);
+            .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc));
         _seqHideAll.Pause();
 
         // TODO: 아직 안쓰임
