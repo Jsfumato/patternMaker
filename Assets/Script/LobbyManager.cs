@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviour{
 
+    public CanvasGroup cGroup;
+
     [Header("Buttons")]
     public Button btStart;
     public Button btStage;
@@ -35,8 +37,21 @@ public class LobbyManager : MonoBehaviour{
     private bool _inited = false;
 
     public void Initialize() {
-        if (_inited)
+        if (_inited) {
+            //
+            title.localPosition = initTitlePos;
+            rectStart.localPosition = initBtStartPos;
+            rectStage.localPosition = initBtStagePos;
+            rectSetting.localPosition = initBtSettingPos;
+            rectMode.localPosition = initBtModePos;
+
+            //
+            gameObject.SetActive(true);
+            cGroup.alpha = 1.0f;
+
+            //
             return;
+        }
 
         // 초기 위치 저장하고
         initTitlePos = title.localPosition;
@@ -49,17 +64,24 @@ public class LobbyManager : MonoBehaviour{
         if (_seqHideAll == null) {
             _seqHideAll = DOTween.Sequence()
                 .OnStart(() => {
+                    //
                     title.localPosition = initTitlePos;
                     rectStart.localPosition = initBtStartPos;
                     rectStage.localPosition = initBtStagePos;
                     rectSetting.localPosition = initBtSettingPos;
                     rectMode.localPosition = initBtModePos;
+
+                    //
+                    gameObject.SetActive(true);
+                    cGroup.alpha = 1.0f;
                 })
                 .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
                 .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
                 .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
                 .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc));
+                .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                .Append(cGroup.DOFade(0.0f, 0.5f))
+                .AppendCallback(() => gameObject.SetActive(false));
             _seqHideAll.Pause();
         }
 
@@ -71,6 +93,17 @@ public class LobbyManager : MonoBehaviour{
         btStart.onClick.AddListener(() => {
             OnStart(() => { });
         });
+
+        //
+        title.localPosition = initTitlePos;
+        rectStart.localPosition = initBtStartPos;
+        rectStage.localPosition = initBtStagePos;
+        rectSetting.localPosition = initBtSettingPos;
+        rectMode.localPosition = initBtModePos;
+
+        //
+        gameObject.SetActive(true);
+        cGroup.alpha = 1.0f;
 
         //
         _inited = true;
