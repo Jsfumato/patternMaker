@@ -25,7 +25,14 @@ public class EditTile : MonoBehaviour {
 
         //
         _runtimePalette = RuntimePalette.Get();
+    }
 
+    public void Initialize(ResourceStage resStage) {
+        if (resStage == null)
+            return;
+
+        Initialize();
+        OnLoadPalette(resStage);
     }
 
     public void OnChangeCanvas() {
@@ -78,7 +85,13 @@ public class EditTile : MonoBehaviour {
 
                 //
                 Utility.ToJSONfile(name, map);
-            }, RuntimePalette.Get().SaveAsBytes(), RuntimePalette.Get().myImage.width, RuntimePalette.Get().myImage.height);
+            }, RuntimePalette.Get().SaveAsBytes(), RuntimePalette.Get().myimage.width, RuntimePalette.Get().myimage.height);
         }
+    }
+
+    public void OnLoadPalette(ResourceStage resStage) {
+        //
+        _runtimePalette.Initialize(resStage.width, resStage.height);
+        _runtimePalette.LoadFromBytes(resStage.bytes);
     }
 }

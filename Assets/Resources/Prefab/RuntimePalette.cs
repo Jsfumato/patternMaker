@@ -22,8 +22,7 @@ public class RuntimePalette : MonoBehaviour
 
     // private
     private Vector2 oldp = Vector2.zero;
-    private Texture2D myimage;
-    public Texture2D myImage { get { return myimage; } }
+    public Texture2D myimage;
 
     private bool _init = false;
     private List<List<Vector2>> _logs = new List<List<Vector2>>();
@@ -327,6 +326,11 @@ public class RuntimePalette : MonoBehaviour
 
         //
         return bytes;
+    }
+
+    public void LoadFromBytes(byte[] bytes) {
+        myimage.LoadRawTextureData(bytes);
+        myimage.Apply();
     }
 
     //===================================================
