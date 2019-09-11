@@ -17,11 +17,8 @@ public class EditTile : MonoBehaviour {
     public Transform _uiStages;
     public Transform _parentContent;
 
-    //
-    public GridLayoutGroup table;
-    public GameObject cell;
 
-    public void Awake() {
+    public void Initialize() {
         //
         parentUI = _parentUI;
         parentContent = _parentContent;
@@ -29,32 +26,6 @@ public class EditTile : MonoBehaviour {
         //
         _runtimePalette = RuntimePalette.Get();
 
-        //
-        ResourceManager.Get().Initialize();
-
-        //
-        if (cell.activeSelf)
-            cell.SetActive(false);
-
-        //
-        foreach (ResourceStage stage in ResourceManager.Get().GetStages()) {
-            var cloned = GameObject.Instantiate(cell);
-            var stageInfo = cloned.GetComponent<StageCell>();
-            if (stageInfo == null)
-                stageInfo = cloned.AddComponent<StageCell>();
-
-            //
-            stageInfo.txtName.text = stage.name;
-            stageInfo.texture = new Texture2D(stage.width, stage.height, TextureFormat.RGBA32, false);
-            stageInfo.texture.LoadRawTextureData(stage.bytes);
-            stageInfo.texture.Apply();
-
-            stageInfo.rawImage.texture = stageInfo.texture;
-
-            //
-            cloned.transform.SetParent(table.transform);
-            cloned.SetActive(true);
-        }
     }
 
     public void OnChangeCanvas() {
