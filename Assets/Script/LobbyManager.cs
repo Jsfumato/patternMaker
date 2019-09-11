@@ -21,18 +21,47 @@ public class LobbyManager : MonoBehaviour{
     public RectTransform rectMode;
 
     //
+    private Vector3 initTitlePos;
+    private Vector3 initBtStartPos;
+    private Vector3 initBtStagePos;
+    private Vector3 initBtSettingPos;
+    private Vector3 initBtModePos;
+
+    //
     private Sequence _seqHideAll;
     private Sequence _used;
 
+    //
+    private bool _inited = false;
+
     public void Initialize() {
-        //
-        _seqHideAll = DOTween.Sequence()
-            .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc));
-        _seqHideAll.Pause();
+        if (_inited)
+            return;
+
+        // 초기 위치 저장하고
+        initTitlePos = title.localPosition;
+        initBtStartPos = rectStart.localPosition;
+        initBtStagePos = rectStage.localPosition;
+        initBtSettingPos = rectSetting.localPosition;
+        initBtModePos = rectMode.localPosition;
+
+        // 연출 세팅하고
+        if (_seqHideAll == null) {
+            _seqHideAll = DOTween.Sequence()
+                .OnStart(() => {
+                    title.localPosition = initTitlePos;
+                    rectStart.localPosition = initBtStartPos;
+                    rectStage.localPosition = initBtStagePos;
+                    rectSetting.localPosition = initBtSettingPos;
+                    rectMode.localPosition = initBtModePos;
+                })
+                .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
+                .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc));
+            _seqHideAll.Pause();
+        }
 
         // TODO: 아직 안쓰임
         btMode.interactable = false;
@@ -42,6 +71,9 @@ public class LobbyManager : MonoBehaviour{
         btStart.onClick.AddListener(() => {
             OnStart(() => { });
         });
+
+        //
+        _inited = true;
     }
 
     // 애니메이션 지정
