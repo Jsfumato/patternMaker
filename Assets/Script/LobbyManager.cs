@@ -66,6 +66,7 @@ public class LobbyManager : MonoBehaviour{
         // 버튼 세팅
         btStart.onClick.RemoveAllListeners();
         btStart.onClick.AddListener(() => {
+            TilerManager.Get().editManager.SetPaletteActive(false);
             OnStart(() => {
                 TilerManager.Get().stageManager.HideAll(null);
                 TilerManager.Get().editManager.Initialize(200, 200);
@@ -74,6 +75,7 @@ public class LobbyManager : MonoBehaviour{
 
         btStage.onClick.RemoveAllListeners();
         btStage.onClick.AddListener(() => {
+            TilerManager.Get().stageManager.gameObject.SetActive(false);
             OnStage(() => {
                 TilerManager.Get().stageManager.HideAll(null);
                 TilerManager.Get().stageManager.FadeInAll(null);

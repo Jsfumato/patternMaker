@@ -35,11 +35,25 @@ public class EditManager : MonoBehaviour {
             TilerManager.Get().lobby.Initialize();
         });
 
+        //
+        btChangeBrush.onClick.RemoveAllListeners();
+        btChangeBrush.onClick.AddListener(OnChangeBrush);
+
+        //
         btClear.onClick.RemoveAllListeners();
         btClear.onClick.AddListener(OnClearPalette);
-        //btSave;
-        //btChangeBrush;
-        //btToggleTool;
+
+        //
+        btSave.onClick.RemoveAllListeners();
+        btSave.onClick.AddListener(OnSavePalette);
+
+        //
+        btToggleTool.onClick.RemoveAllListeners();
+        btToggleTool.onClick.AddListener(_runtimePalette.OnToggleBrushMode);
+    }
+
+    public void SetPaletteActive(bool active) {
+        _runtimePalette.gameObject.SetActive(active);
     }
 
     public void Initialize(int width, int height) {

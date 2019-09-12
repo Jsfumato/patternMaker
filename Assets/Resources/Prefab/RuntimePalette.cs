@@ -51,12 +51,17 @@ public class RuntimePalette : MonoBehaviour
     private DrawMode _mode;
 
     public void Initialize(int width, int height) {
-        if (_init)
-            return;
+        //
+        gameObject.SetActive(false);
 
-        if (original == null) {
-            original = new Texture2D(width, height, TextureFormat.RGBA32, false);
-        }
+        //
+        this.width = width;
+        this.height = height;
+
+        //
+        if (original != null)
+            original = null;
+        original = new Texture2D(width, height, TextureFormat.RGBA32, false);
 
         // change these next three variables to whatever you want!!!
         drawcolor = Color.red;
@@ -76,7 +81,7 @@ public class RuntimePalette : MonoBehaviour
         rawImg.texture = myimage;
 
         //
-        _init = true;
+        gameObject.SetActive(true);
     }
 
     public void OnClear() {
@@ -182,6 +187,14 @@ public class RuntimePalette : MonoBehaviour
 
         //
         _currentLog.Add(new Vector2(_px, _py));
+    }
+
+    public void OnToggleBrushMode() {
+        if (_mode == DrawMode.Draw) {
+            _mode = DrawMode.Erase;
+        } else {
+            _mode = DrawMode.Draw;
+        }
     }
 
     public void OnPointerDown() {
@@ -411,7 +424,7 @@ public class RuntimePalette : MonoBehaviour
             _newX = Mathf.RoundToInt(_p.x - 1);
             _newY = Mathf.RoundToInt(_p.y);
             _array_pos = _newY * image.width + _newX;
-            if (_newX >= 0 &&!_check.Contains(_array_pos)) {
+            if (_newX >= 0 && !_check.Contains(_array_pos)) {
                 if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
                     m_List.Enqueue(new Vector2(_newX, _newY));
                     _check.Add(_array_pos);
