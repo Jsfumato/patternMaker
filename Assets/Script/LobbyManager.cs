@@ -91,7 +91,15 @@ public class LobbyManager : MonoBehaviour{
         // 버튼 세팅
         btStart.onClick.RemoveAllListeners();
         btStart.onClick.AddListener(() => {
-            OnStart(() => { });
+            OnStart(() => {
+                TilerManager.Get().stageManager.HideAll(() => { });
+                TilerManager.Get().editManager.Initialize(200, 200);
+            });
+        });
+
+        btStage.onClick.RemoveAllListeners();
+        btStage.onClick.AddListener(() => {
+            OnStage(() => { });
         });
 
         //

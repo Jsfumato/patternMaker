@@ -105,8 +105,10 @@ public class Utility : MonoBehaviour {
             return false;
         }
 
+#if UNITY_EDITOR
         //Re-import the file to update the reference in the editor
         AssetDatabase.ImportAsset(path);
+#endif
 
         return true;
     }
@@ -239,6 +241,8 @@ public class Utility : MonoBehaviour {
     //#endif
 
     //    }
+
+    //public static 
 
     public static T LoadResource<T>(string path) {
         object obj = null;

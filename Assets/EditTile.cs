@@ -27,6 +27,11 @@ public class EditTile : MonoBehaviour {
         _runtimePalette = RuntimePalette.Get();
     }
 
+    public void Initialize(int width, int height) {
+        Initialize();
+        _runtimePalette.Initialize(width, height);
+    }
+
     public void Initialize(ResourceStage resStage) {
         if (resStage == null)
             return;

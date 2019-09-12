@@ -1,12 +1,20 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StageManager : MonoBehaviour {
     //
+    public CanvasGroup cGroup;
+
+    [Header("Table")]
     public GridLayoutGroup table;
     public GameObject cell;
+
+    //
+    private Sequence _seqHideAll;
+    private Sequence _used;
 
     public void Initialize() {
 
@@ -34,12 +42,58 @@ public class StageManager : MonoBehaviour {
                 btTouched = cloned.AddComponent<Button>();
             btTouched.onClick.RemoveAllListeners();
             btTouched.onClick.AddListener(() => {
-                TilerManager.Get().editManager.Initialize(resStage);
+                FadeOutAll(() => {
+                    TilerManager.Get().editManager.Initialize(resStage);
+                });
             });
 
             // UI에 표기
             cloned.transform.SetParent(table.transform);
             cloned.SetActive(true);
         }
+
+        // 연출 세팅하고
+        if (_seqHideAll == null) {
+            _seqHideAll = DOTween.Sequence()
+                .OnStart(() => {
+                    //
+                    //title.localPosition = initTitlePos;
+                    //rectStart.localPosition = initBtStartPos;
+                    //rectStage.localPosition = initBtStagePos;
+                    //rectSetting.localPosition = initBtSettingPos;
+                    //rectMode.localPosition = initBtModePos;
+
+                    //
+                    gameObject.SetActive(true);
+                    cGroup.alpha = 1.0f;
+                })
+                //.Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
+                //.Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                //.Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                //.Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                //.Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+                .Append(cGroup.DOFade(0.0f, 0.5f))
+                .AppendCallback(() => gameObject.SetActive(false));
+            _seqHideAll.Pause();
+        }
+    }
+
+    public void FadeOutAll(TweenCallback callback) {
+        if (_used != null)
+            _used.Kill();
+
+        //
+        _used = _seqHideAll.OnComplete(callback);
+        _used.Play();
+    }
+
+    public void HideAll(TweenCallback callback) {
+        if (_used != null)
+            _used.Kill();
+
+        //
+        gameObject.SetActive(false);
+        if (callback != null)
+            callback();
     }
 }
