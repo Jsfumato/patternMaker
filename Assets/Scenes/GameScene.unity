@@ -3227,8 +3227,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentUI: {fileID: 648789482}
-  _uiStages: {fileID: 0}
   _parentContent: {fileID: 1622560469}
+  btHome: {fileID: 1712492980}
+  btSave: {fileID: 2058603588}
+  btChangeBrush: {fileID: 1778475900}
+  btToggleTool: {fileID: 1480256960}
 --- !u!1 &2119587346
 GameObject:
   m_ObjectHideFlags: 0

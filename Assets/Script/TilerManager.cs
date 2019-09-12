@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class TilerManager : MonoBehaviour
 {
-    public EditTile editManager;
+    public EditManager editManager;
     public LobbyManager lobby;
     public StageManager stageManager;
 
     // http://lonpeach.com/2017/02/04/unity3d-singleton-pattern-example/
     private static TilerManager instance;
+
+    //
+    public Transform parentUI;
+    public Transform parentContent;
 
     public static TilerManager Get() {
         return instance;

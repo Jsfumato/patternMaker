@@ -36,7 +36,7 @@ public class RuntimePalette : MonoBehaviour
 
     public static RuntimePalette Get() {
         if (_palette == null) {
-            _palette = Utility.InstantiatePrefab<RuntimePalette>(EditTile.parentContent)
+            _palette = Utility.InstantiatePrefab<RuntimePalette>(TilerManager.Get().parentContent)
                 .GetComponent<RuntimePalette>();
         }
         return _palette;
