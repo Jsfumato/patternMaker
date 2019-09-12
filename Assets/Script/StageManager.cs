@@ -78,6 +78,15 @@ public class StageManager : MonoBehaviour {
         }
     }
 
+    public void FadeInAll(TweenCallback callback) {
+        if (_used != null)
+            _used.Kill();
+
+        //
+        gameObject.SetActive(true);
+        cGroup.alpha = 1.0f;
+    }
+
     public void FadeOutAll(TweenCallback callback) {
         if (_used != null)
             _used.Kill();

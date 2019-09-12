@@ -17,6 +17,11 @@ public class EditTile : MonoBehaviour {
     public Transform _uiStages;
     public Transform _parentContent;
 
+    [Header("Button")]
+    public Button btHome;
+    public Button btSave;
+    public Button btChangeBrush;
+    public Button btToggleTool;
 
     public void Initialize() {
         //

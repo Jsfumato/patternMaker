@@ -99,7 +99,9 @@ public class LobbyManager : MonoBehaviour{
 
         btStage.onClick.RemoveAllListeners();
         btStage.onClick.AddListener(() => {
-            OnStage(() => { });
+            OnStage(() => {
+                TilerManager.Get().stageManager.FadeInAll(null);
+            });
         });
 
         //
