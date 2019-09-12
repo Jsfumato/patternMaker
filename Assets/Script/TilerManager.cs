@@ -42,4 +42,13 @@ public class TilerManager : MonoBehaviour
         lobby.Initialize();
         stageManager.Initialize();
     }
+
+    public void FadeOutAll() {
+        if (editManager.isActiveAndEnabled)
+            editManager.FadeOutAll(null);
+        if (lobby.isActiveAndEnabled)
+            lobby.FadeOutAll(null);
+        if (stageManager.isActiveAndEnabled)
+            stageManager.FadeOutAll(null);
+    }
 }

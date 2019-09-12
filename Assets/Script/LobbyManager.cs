@@ -60,31 +60,6 @@ public class LobbyManager : MonoBehaviour{
         initBtSettingPos = rectSetting.localPosition;
         initBtModePos = rectMode.localPosition;
 
-        // 연출 세팅하고
-        if (_seqHideAll == null) {
-            _seqHideAll = DOTween.Sequence()
-                .OnStart(() => {
-                    //
-                    title.localPosition = initTitlePos;
-                    rectStart.localPosition = initBtStartPos;
-                    rectStage.localPosition = initBtStagePos;
-                    rectSetting.localPosition = initBtSettingPos;
-                    rectMode.localPosition = initBtModePos;
-
-                    //
-                    gameObject.SetActive(true);
-                    cGroup.alpha = 1.0f;
-                })
-                .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
-                .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                .Append(cGroup.DOFade(0.0f, 0.5f))
-                .AppendCallback(() => gameObject.SetActive(false));
-            _seqHideAll.Pause();
-        }
-
         // TODO: 아직 안쓰임
         btMode.interactable = false;
 
@@ -92,7 +67,7 @@ public class LobbyManager : MonoBehaviour{
         btStart.onClick.RemoveAllListeners();
         btStart.onClick.AddListener(() => {
             OnStart(() => {
-                TilerManager.Get().stageManager.HideAll(() => { });
+                TilerManager.Get().stageManager.HideAll(null);
                 TilerManager.Get().editManager.Initialize(200, 200);
             });
         });
@@ -100,6 +75,7 @@ public class LobbyManager : MonoBehaviour{
         btStage.onClick.RemoveAllListeners();
         btStage.onClick.AddListener(() => {
             OnStage(() => {
+                TilerManager.Get().stageManager.HideAll(null);
                 TilerManager.Get().stageManager.FadeInAll(null);
             });
         });
@@ -119,24 +95,48 @@ public class LobbyManager : MonoBehaviour{
         _inited = true;
     }
 
+    private Sequence GetFadeOutSeq() {
+        return DOTween.Sequence()
+            .OnStart(() => {
+                //
+                title.localPosition = initTitlePos;
+                rectStart.localPosition = initBtStartPos;
+                rectStage.localPosition = initBtStagePos;
+                rectSetting.localPosition = initBtSettingPos;
+                rectMode.localPosition = initBtModePos;
+
+                //
+                gameObject.SetActive(true);
+                cGroup.alpha = 1.0f;
+            })
+            .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+            .Append(cGroup.DOFade(0.0f, 0.5f))
+            .AppendCallback(() => gameObject.SetActive(false));
+    }
+
     // 애니메이션 지정
-    public void HideAll(TweenCallback callback) {
+    public void FadeOutAll(TweenCallback callback) {
         if (_used != null)
             _used.Kill();
 
         //
-        _used = _seqHideAll.OnComplete(callback);
-        _used.Play();
+        _used = GetFadeOutSeq().OnComplete(callback);
+        _used.Restart();
     }
+
 
     // 타일 제작 UI 바로 진입
     public void OnStart(TweenCallback callback) {
-        HideAll(callback);
+        FadeOutAll(callback);
     }
 
     // stage 리스트 출력
     public void OnStage(TweenCallback callback) {
-        HideAll(callback);
+        FadeOutAll(callback);
     }
 
     public void OnSetting() {
