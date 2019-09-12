@@ -86,6 +86,7 @@ public class RuntimePalette : MonoBehaviour
             _colors[i] = Color.white;
         }
 
+        myimage.SetPixels32(_colors);
         myimage.Apply();
         myimage.filterMode = FilterMode.Point;//<remove this if you want it more fuzzy
     }

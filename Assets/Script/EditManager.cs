@@ -4,32 +4,42 @@ using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.UI;
 using System.Text;
+using DG.Tweening;
 
-public class EditTile : MonoBehaviour {
+public class EditManager : MonoBehaviour {
 
     //
-    public static Transform parentUI;
-    public static Transform parentContent;
     public static RuntimePalette _runtimePalette;
-
-    //
-    public Transform _parentUI;
-    public Transform _uiStages;
-    public Transform _parentContent;
 
     [Header("Button")]
     public Button btHome;
     public Button btSave;
     public Button btChangeBrush;
     public Button btToggleTool;
+    public Button btClear;
+
+    //
+    private Sequence _seqHideAll;
+    private Sequence _used;
 
     public void Initialize() {
-        //
-        parentUI = _parentUI;
-        parentContent = _parentContent;
 
         //
         _runtimePalette = RuntimePalette.Get();
+        _runtimePalette.transform.SetParent(TilerManager.Get().parentContent);
+
+        // 버튼 세팅
+        btHome.onClick.RemoveAllListeners();
+        btHome.onClick.AddListener(() => {
+            TilerManager.Get().FadeOutAll();
+            TilerManager.Get().lobby.Initialize();
+        });
+
+        btClear.onClick.RemoveAllListeners();
+        btClear.onClick.AddListener(OnClearPalette);
+        //btSave;
+        //btChangeBrush;
+        //btToggleTool;
     }
 
     public void Initialize(int width, int height) {
@@ -46,34 +56,21 @@ public class EditTile : MonoBehaviour {
     }
 
     public void OnChangeCanvas() {
-        var popup = Utility.InstantiatePrefab<Popup_ChangeCanvas>(parentUI);
+        var popup = Utility.InstantiatePrefab<Popup_ChangeCanvas>(TilerManager.Get().parentUI);
         if (popup.GetComponent<Popup_ChangeCanvas>() != null) {
             popup.GetComponent<Popup_ChangeCanvas>().Initialize((width, height) => {
                 RuntimePalette.Get().OnChangeCanvasSize(width, height);
             });
         }
-
-        //
-        _uiStages.gameObject.SetActive(false);
     }
 
     public void OnChangeBrush() {
-        var popup = Utility.InstantiatePrefab<Popup_ChangeBrush>(parentUI);
+        var popup = Utility.InstantiatePrefab<Popup_ChangeBrush>(TilerManager.Get().parentUI);
         if (popup.GetComponent<Popup_ChangeBrush>() != null) {
             popup.GetComponent<Popup_ChangeBrush>().Initialize((color, size) => {
                 RuntimePalette.Get().OnChangeBrush(color, size);
             });
         }
-
-        //
-        _uiStages.gameObject.SetActive(false);
-    }
-
-    public void OnCreatePalette() {
-        RuntimePalette.Get().Initialize(640, 640);
-
-        //
-        _uiStages.gameObject.SetActive(false);
     }
 
     public void OnClearPalette() {
@@ -82,7 +79,7 @@ public class EditTile : MonoBehaviour {
 
     public void OnSavePalette() {
         // 
-        var popup = Utility.InstantiatePrefab<Popup_InputText>(parentUI);
+        var popup = Utility.InstantiatePrefab<Popup_InputText>(TilerManager.Get().parentUI);
         if (popup.GetComponent<Popup_InputText>() != null) {
             popup.GetComponent<Popup_InputText>().Initialize((name, bytes, width, height) => {
 
@@ -104,4 +101,17 @@ public class EditTile : MonoBehaviour {
         _runtimePalette.Initialize(resStage.width, resStage.height);
         _runtimePalette.LoadFromBytes(resStage.bytes);
     }
+
+    // =========================================
+    public void FadeOutAll(TweenCallback callback) {
+        if (_used != null)
+            _used.Kill();
+
+        //
+        if (_seqHideAll != null) {
+            _used = _seqHideAll.OnComplete(callback);
+            _used.Play();
+        }
+    }
+
 }
