@@ -7,6 +7,7 @@ public class TilerManager : MonoBehaviour
     public EditManager editManager;
     public LobbyManager lobby;
     public StageManager stageManager;
+    public ModelManager modelManager;
 
     // http://lonpeach.com/2017/02/04/unity3d-singleton-pattern-example/
     private static TilerManager instance;
