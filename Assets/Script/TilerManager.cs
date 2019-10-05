@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TilerManager : MonoBehaviour
-{
+public class TilerManager : MonoBehaviour {
     public EditManager editManager;
     public LobbyManager lobby;
     public StageManager stageManager;
-    public ModelManager modelManager;
 
     // http://lonpeach.com/2017/02/04/unity3d-singleton-pattern-example/
     private static TilerManager instance;
@@ -51,5 +49,11 @@ public class TilerManager : MonoBehaviour
             lobby.FadeOutAll(null);
         if (stageManager.isActiveAndEnabled)
             stageManager.FadeOutAll(null);
+    }
+
+    public void HideAll() {
+        editManager.gameObject.SetActive(false);
+        lobby.gameObject.SetActive(false);
+        stageManager.gameObject.SetActive(false);
     }
 }

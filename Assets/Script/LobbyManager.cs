@@ -66,16 +66,18 @@ public class LobbyManager : MonoBehaviour{
         // 버튼 세팅
         btStart.onClick.RemoveAllListeners();
         btStart.onClick.AddListener(() => {
-            TilerManager.Get().editManager.SetPaletteActive(false);
+            TilerManager.Get().HideAll();
             OnStart(() => {
                 TilerManager.Get().stageManager.HideAll(null);
                 TilerManager.Get().editManager.Initialize(200, 200);
+                TilerManager.Get().editManager.gameObject.SetActive(true);
             });
         });
 
         btStage.onClick.RemoveAllListeners();
         btStage.onClick.AddListener(() => {
-            TilerManager.Get().stageManager.gameObject.SetActive(false);
+            TilerManager.Get().HideAll();
+            ResourceManager.Get().Reload();
             OnStage(() => {
                 TilerManager.Get().stageManager.HideAll(null);
                 TilerManager.Get().stageManager.FadeInAll(null);
