@@ -83,7 +83,7 @@ public class Utility : MonoBehaviour {
         if (mapToSave == null)
             return false;
 
-        string path = string.Format("Assets/Resources/Custom/{0}.json", fileName);
+        string path = string.Format("Assets/Patches/Stages/{0}.json", fileName);
 
         try {
             // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함

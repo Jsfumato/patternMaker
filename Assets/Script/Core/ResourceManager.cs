@@ -33,8 +33,14 @@ public class ResourceManager {
             return;
 
         //
-        InitStages();
+        Reload();
+
+        //
         singleton.inited = true;
+    }
+
+    public void Reload() {
+        InitStages();
     }
 
     private void InitStages() {
