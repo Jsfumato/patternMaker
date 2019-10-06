@@ -27,6 +27,7 @@ public class EditManager : MonoBehaviour {
         //
         _runtimePalette = RuntimePalette.Get();
         _runtimePalette.transform.SetParent(TilerManager.Get().parentContent);
+        _runtimePalette.gameObject.SetActive(false);
 
         // 버튼 세팅
         btHome.onClick.RemoveAllListeners();
@@ -114,6 +115,9 @@ public class EditManager : MonoBehaviour {
         //
         _runtimePalette.Initialize(resStage.width, resStage.height);
         _runtimePalette.LoadFromBytes(resStage.bytes);
+
+        //
+        _runtimePalette.gameObject.SetActive(true);
     }
 
     // =========================================
