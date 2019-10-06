@@ -79,6 +79,34 @@ public class Utility : MonoBehaviour {
         }
     }
 
+    public static bool SaveFile(string fileName, byte[] bytes) {
+        string path = string.Format("Assets/Parser/{0}.png", fileName);
+
+        try {
+            // IDisposable을 상속한 TextReader를 상속한 StreamReader는, 해당 스코프를 벗어날 때 자동으로 Dispose를 호출함
+            // TODO: StreamReader 내의 MemoryStream도 자동으로 Dispose 되는지 확인 필요
+
+            if (File.Exists(path))
+                File.Delete(path);
+
+            var _file = File.Create(path);
+
+            using (BinaryWriter writer = new BinaryWriter(_file)) {
+                writer.Write(bytes);
+            }
+        } catch {
+            // 저장에 실패하면 false 반환
+            return false;
+        }
+
+#if UNITY_EDITOR
+        //Re-import the file to update the reference in the editor
+        AssetDatabase.ImportAsset(path);
+#endif
+
+        return true;
+    }
+
     public static bool ToJSONfile(string fileName, Dictionary<string, object> mapToSave) {
         if (mapToSave == null)
             return false;

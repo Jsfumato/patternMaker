@@ -9,15 +9,15 @@ public class TileParser : MonoBehaviour
     public Texture2D origin;
     public Texture2D parsedResult;
 
-    public void OnParseTileImage() {
+    public void OnParseTileImage(float weight) {
         if (origin == null)
             return;
 
         //
-        parsedResult = ParseOutline(origin, 50);
+        parsedResult = ParseOutline(origin, weight);
     }
 
-    private Texture2D ParseOutline(Texture2D origin, int weight) {
+    private Texture2D ParseOutline(Texture2D origin, float weight) {
 
         // 컬러 정보를 가져와서
         Color32[] _colors = origin.GetPixels32();
@@ -59,12 +59,14 @@ public class TileParser : MonoBehaviour
             // 세로로 서칭하면서
             for (int j = 0; j < origin.height; ++j) {
                 int idx = i + j * origin.width;
-                if (idx >= _colors.Length || idx + origin.height >= _colors.Length)
+                int idx_next = i + (j + 1) * origin.width;
+
+                if (idx >= _colors.Length || idx_next >= _colors.Length)
                     break;
 
                 //
                 var _current = _colors[idx];
-                var _next = _colors[idx + origin.height];
+                var _next = _colors[idx_next];
 
                 //
                 var _diff_r = Mathf.Abs(_current.r - _next.r);
@@ -75,7 +77,7 @@ public class TileParser : MonoBehaviour
                 if ((_diff_r + _diff_g + _diff_b) < weight)
                     continue;
 
-                _colors_result[i] = Color.black;
+                _colors_result[idx] = Color.black;
             }
         }
 
@@ -91,25 +93,28 @@ public class TileParser : MonoBehaviour
 #if UNITY_EDITOR
 [CustomEditor(typeof(TileParser))]
 public class TileParserEditor : Editor {
+    public float hSliderValue;
+
     public override void OnInspectorGUI() {
         TileParser tp = (TileParser) target;
 
         //
         DrawDefaultInspector();
+        EditorGUILayout.Space();
 
-        //
-        var centeredStyle = new GUIStyle(GUI.skin.GetStyle("Label"));
-        centeredStyle.alignment = TextAnchor.UpperCenter;
-        GUILayout.Label(new GUIContent("Parse"), centeredStyle);
-
+        hSliderValue = GUILayout.HorizontalSlider(hSliderValue, 0f, 100f);
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
         EditorGUILayout.Space();
 
         if (GUILayout.Button("Start Parse")) {
-            tp.OnParseTileImage();
+            tp.OnParseTileImage(hSliderValue);
         }
 
         if (GUILayout.Button("Save Parse")) {
-            tp.parsedResult.EncodeToPNG();
+            var _png = tp.parsedResult.EncodeToPNG();
+            Utility.SaveFile("test", _png);
         }
     }
 }
