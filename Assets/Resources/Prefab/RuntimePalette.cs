@@ -165,7 +165,9 @@ public class RuntimePalette : MonoBehaviour
 
         //
         if (fillmode) {
-            FloodFill(myimage, new Vector2(_px, _py), drawcolor);
+            var _origin = new Vector2(_px, _py);
+            var targets = GetTargets(myimage, _origin, drawcolor);
+            StartCoroutine(CoFillPaint(myimage, _origin, targets, drawcolor));
             return;
         }
 
@@ -345,6 +347,127 @@ public class RuntimePalette : MonoBehaviour
     public void LoadFromBytes(byte[] bytes) {
         myimage.LoadRawTextureData(bytes);
         myimage.Apply();
+    }
+
+    //===================================================
+    private HashSet<Vector2> GetTargets(Texture2D image, Vector2 point, Color color) {
+        Color32[] _colors = image.GetPixels32();
+        //
+        var m_List = new Queue<Vector2>();
+        var _check = new HashSet<Vector2>();
+
+        //
+        //get pixel 1 to left (w) of Q[n]
+        int _array_pos_base = Mathf.RoundToInt(point.y) * image.width + Mathf.RoundToInt(point.x);
+        // Check if this is a valid position
+        if (_array_pos_base > _colors.Length || _array_pos_base < 0)
+            return _check;
+
+        //
+        m_List.Enqueue(point);
+        _check.Add(point);
+        var _colToCompare = _colors[_array_pos_base];
+
+        //
+        while (true) {
+            if (m_List.Count <= 0)
+                break;
+
+            var _p = m_List.Dequeue();
+
+            var _array_pos = Mathf.RoundToInt(_p.y) * image.width + Mathf.RoundToInt(_p.x);
+            _colors[_array_pos] = color;
+
+            //
+            // east
+            int _newX = Mathf.RoundToInt(_p.x + 1);
+            int _newY = Mathf.RoundToInt(_p.y);
+            var _pos = new Vector2(_newX, _newY);
+            if (_newX <= image.width && !_check.Contains(_pos)) {
+                if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_pos);
+                }
+            }
+
+            // west
+            _newX = Mathf.RoundToInt(_p.x - 1);
+            _newY = Mathf.RoundToInt(_p.y);
+            _pos = new Vector2(_newX, _newY);
+            if (_newX >= 0 && !_check.Contains(_pos)) {
+                if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_pos);
+                }
+            }
+
+            //
+            //11.If the color of the node to the north of n is target-color, add that node to Q.
+            _newX = Mathf.RoundToInt(_p.x);
+            _newY = Mathf.RoundToInt(_p.y + 1);
+            _pos = new Vector2(_newX, _newY);
+            _array_pos = _newY * image.width + _newX;
+            if (_newY <= image.height && !_check.Contains(_pos)) {
+                if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_pos);
+                }
+            }
+
+            //
+            //12.If the color of the node to the south of n is target - color, add that node to Q.
+            _newX = Mathf.RoundToInt(_p.x);
+            _newY = Mathf.RoundToInt(_p.y - 1);
+            _pos = new Vector2(_newX, _newY);
+            if (_newY >= 0 && !_check.Contains(_pos)) {
+                if (_array_pos >= 0 && _colors[_array_pos].Equals(_colToCompare)) {
+                    m_List.Enqueue(new Vector2(_newX, _newY));
+                    _check.Add(_pos);
+                }
+            }
+        }
+
+        return _check;
+    }
+
+    IEnumerator CoFillPaint(Texture2D image, Vector2 origin, HashSet<Vector2> targets, Color color) {
+        if (targets.Count <= 0)
+            yield break;
+
+        Color32[] _colors = image.GetPixels32();
+        HashSet<Vector2> _targetRemoved = new HashSet<Vector2>();
+                
+        //
+        var m_List = new Queue<Vector2>();
+        var _check = new HashSet<int>();
+        int cnt = 0;
+
+        int _distance = 1;
+        while (true) {
+            if (targets.Count <= 0)
+                break;
+
+            foreach (var target in targets) {
+                if (Vector2.Distance(origin, target) > _distance)
+                    continue;
+
+                var _array_pos = (int) target.y * image.width + (int) target.x;
+                _colors[_array_pos] = color;
+                _targetRemoved.Add(target);
+            }
+
+            //
+            targets.RemoveWhere(x => _targetRemoved.Contains(x));
+            _targetRemoved.Clear();
+
+            //
+            image.SetPixels32(_colors);
+            image.Apply();
+            yield return new WaitForEndOfFrame();
+
+            //
+            _distance++;
+        }
     }
 
     //===================================================
