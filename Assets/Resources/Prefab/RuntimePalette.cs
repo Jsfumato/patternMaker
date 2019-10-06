@@ -369,10 +369,7 @@ public class RuntimePalette : MonoBehaviour
         var _colToCompare = _colors[_array_pos_base];
 
         //
-        while (true) {
-            if (m_List.Count <= 0)
-                break;
-
+        while (m_List.Count > 0) {
             var _p = m_List.Dequeue();
 
             var _array_pos = Mathf.RoundToInt(_p.y) * image.width + Mathf.RoundToInt(_p.x);
@@ -383,6 +380,7 @@ public class RuntimePalette : MonoBehaviour
             int _newX = Mathf.RoundToInt(_p.x + 1);
             int _newY = Mathf.RoundToInt(_p.y);
             var _pos = new Vector2(_newX, _newY);
+            _array_pos = _newY * image.width + _newX;
             if (_newX <= image.width && !_check.Contains(_pos)) {
                 if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
                     m_List.Enqueue(new Vector2(_newX, _newY));
@@ -394,6 +392,7 @@ public class RuntimePalette : MonoBehaviour
             _newX = Mathf.RoundToInt(_p.x - 1);
             _newY = Mathf.RoundToInt(_p.y);
             _pos = new Vector2(_newX, _newY);
+            _array_pos = _newY * image.width + _newX;
             if (_newX >= 0 && !_check.Contains(_pos)) {
                 if (_array_pos < _colors.Length && _colors[_array_pos].Equals(_colToCompare)) {
                     m_List.Enqueue(new Vector2(_newX, _newY));
@@ -419,6 +418,7 @@ public class RuntimePalette : MonoBehaviour
             _newX = Mathf.RoundToInt(_p.x);
             _newY = Mathf.RoundToInt(_p.y - 1);
             _pos = new Vector2(_newX, _newY);
+            _array_pos = _newY * image.width + _newX;
             if (_newY >= 0 && !_check.Contains(_pos)) {
                 if (_array_pos >= 0 && _colors[_array_pos].Equals(_colToCompare)) {
                     m_List.Enqueue(new Vector2(_newX, _newY));
@@ -440,13 +440,9 @@ public class RuntimePalette : MonoBehaviour
         //
         var m_List = new Queue<Vector2>();
         var _check = new HashSet<int>();
-        int cnt = 0;
 
         int _distance = 1;
-        while (true) {
-            if (targets.Count <= 0)
-                break;
-
+        while (targets.Count > 0) {
             foreach (var target in targets) {
                 if (Vector2.Distance(origin, target) > _distance)
                     continue;
