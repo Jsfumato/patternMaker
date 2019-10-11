@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class AssetBundleManager : MonoBehaviour {
+public abstract class AssetBundleManager : MonoBehaviour
+{
 
     //
     public delegate void StatusCallback(bool success, string message, long fileSize);
@@ -36,8 +37,7 @@ public abstract class AssetBundleManager : MonoBehaviour {
 
     public static string persistentDataPathInternal {
 #if UNITY_ANDROID
-        get
-        {
+        get {
             if (Application.isEditor || !Application.isPlaying) return Application.persistentDataPath;
             string path = null;
             if (string.IsNullOrEmpty(path)) path = GetPersistentDataPath("storage", "emulated", "0", "Android", "data", Application.identifier, "files");
@@ -53,8 +53,7 @@ public abstract class AssetBundleManager : MonoBehaviour {
 
     public static string persistentDataPathExternal {
 #if UNITY_ANDROID
-        get
-        {
+        get {
             if (Application.isEditor || !Application.isPlaying) return null;
             string path = null;
             if (string.IsNullOrEmpty(path)) path = GetPersistentDataPath("storage", "sdcard0", "Android", "data", Application.identifier, "files");
@@ -109,7 +108,10 @@ public abstract class AssetBundleManager : MonoBehaviour {
 
     //
     public static List<string> assetBundleNames = new List<string>() {
-        "Stages"
+        "prefabs",
+        "json",
+        "animations",
+        "sprites"
     };
 
     //
@@ -127,11 +129,8 @@ public abstract class AssetBundleManager : MonoBehaviour {
         return _singleton;
     }
 
-    //
-    [NonSerialized]
-    public AssetBundleInfo commonsAssetBundle;
-
-    public class AssetBundleInfo {
+    public class AssetBundleInfo
+    {
         public Stream stream;
         public AssetBundle assetBundle;
 
@@ -164,17 +163,7 @@ public abstract class AssetBundleManager : MonoBehaviour {
     protected uint _version;
     public bool loadedAll = false;
 
-    public void UnloadCommonAssetBundle() {
-        if (commonsAssetBundle != null) {
-            commonsAssetBundle.Destroy();
-            assetBundles.Remove(commonsAssetBundle);
-            commonsAssetBundle = null;
-        }
-    }
-
     public virtual void Awake() {
-
-        //
         var cache = Caching.currentCacheForWriting;
         cache.expirationDelay = 12960000;
         cache.maximumAvailableStorageSpace = 4 * 1024 * 1024 * 1024L;
@@ -202,63 +191,21 @@ public abstract class AssetBundleManager : MonoBehaviour {
             onFinish(true, null, 0);
         }
     }
-    
-    public void LoadAll(Action<bool, string> _onFinish, ProgressCallback onProgress) {
 
-        Action<bool> onFinish = delegate (bool success) {
-
-            if (success == false) {
-                if (_onFinish != null)
-                    _onFinish(false, null);
-                return;
-            }
-
-            //
-            try {
-                ResourceManager.Get().Initialize();
-
-                //
-                UnloadCommonAssetBundle();
-            } catch (Exception e) {
-                Debug.LogWarning(e);
-
-                if (_onFinish != null) {
-                    _onFinish(false, e.ToString());
-                }
-                return;
-            }
-
-            if (_onFinish != null)
-                _onFinish(success, null);
-            return;
-        };
-
-        ////
-        //if (Config.ignoreAssetBundle) {
-        //    if (onFinish != null)
-        //        onFinish(true);
-
-        //    return;
-        //}
-
-        //
-        StartCoroutine(
-            Load(assetBundleNames, delegate (bool success) {
-                if (onFinish != null)
-                    onFinish(success);
-            }, onProgress));
+    public void LoadAll(Action<bool> onFinish, ProgressCallback onProgress) {
+        StartCoroutine(CoReloadAll(assetBundleNames, onFinish, onProgress));
     }
 
-    IEnumerator Load(IEnumerable<string> names, Action<bool> onFinish, ProgressCallback onProgress) {
 
-        yield return null;
+    private IEnumerator CoReloadAll(IEnumerable<string> names, Action<bool> onFinish, ProgressCallback onProgress) {
+
+        // 로드된 번들들 destroy
         yield return Resources.UnloadUnusedAssets();
-
-        //
         foreach (var ab in assetBundles)
             ab.Destroy();
         assetBundles.Clear();
 
+        // progress 콜백 초기화
         if (onProgress != null)
             onProgress(0f);
 
@@ -266,94 +213,79 @@ public abstract class AssetBundleManager : MonoBehaviour {
         bool success = true;
         int i = 0;
         var nameCount = names.Count();
-        foreach (var name in names) {
+
+        //
+        foreach (var fileName in names) {
             //
-            Stream stream = null;
-            AssetBundleCreateRequest req = null;
-
-            //// 일단 StreamingAssets 폴더에서 가져오기를 시도한다.
-            //try {
-            //    string path = Path.Combine(Application.streamingAssetsPath, "AssetBundles/" + name + ".unity3d");
-
-            //    stream = new XorStream(new FileStream(path, FileMode.Open, FileAccess.Read), KEY);
-            //    req = AssetBundle.LoadFromStreamAsync(stream);
-            //} catch {
-            //}
-
-            // 로딩 시도!
-            if (req != null)
-                yield return req;
+            string configKey = string.Format("AssetHash_{0}", fileName);
 
             //
-            if (req != null && req.assetBundle) {
-                // PASS
-            } else {
-
-                try {
-                    if (stream != null)
-                        stream.Close();
-                } catch {
-
+            bool _loaded = false;
+            yield return StartCoroutine(CoLoadFromStreamingAssetsPath(fileName, (req, stream) => {
+                // 실패했다면, 스트림 정리
+                if ((req == null || !req.assetBundle) && stream != null) {
+                    stream.Close();
+                    return;
                 }
 
-                //// persistentDataPath 폴더에서 가져오기를 시도한다.
-                //try {
-                //    string path = this is AssetBundleManager_NXPatcher ? NXPatcher.GetFilePath(name + ".unity3d")
-                //        : Path.Combine(persistentDataPath, name + ".unity3d");
-
-                //    stream = new XorStream(new FileStream(path, FileMode.Open, FileAccess.Read), KEY);
-                //    req = AssetBundle.LoadFromStreamAsync(stream);
-                //} catch {
-                //}
-
-                // 로딩 시도!
-                if (req != null)
-                    yield return req;
-            }
-
-            try {
-                if (req != null && req.assetBundle != null) {
-                    req.assetBundle.name = name;
-
-                    //
-                    var abInfo = new AssetBundleInfo(req.assetBundle, stream);
-
-                    //
-                    if (name == "Commons")
-                        commonsAssetBundle = abInfo;
-
-                    //
-                    assetBundles.Add(abInfo);
-                    Debug.Log(string.Format("Loaded {0}.unity3d", name));
-
-                    if (onProgress != null)
-                        onProgress(++i / (float) nameCount);
-                } else {
-                    try {
-                        if (stream != null)
-                            stream.Close();
-                    } catch {
-
-                    }
-
-                    //
-                    success = false;
-
-                    string configKey = string.Format("AssetHash_{0}", name);
-                    PlayerPrefs.SetString(configKey, "");
-                    Debug.LogWarning(string.Format("Failed to load {0}.unity3d", name));
-                    break;
-                }
-            } catch (Exception e) {
-                Debug.LogException(e);
-                success = false;
+                // 성공했다면 추가
+                req.assetBundle.name = fileName;
+                var abInfo = new AssetBundleInfo(req.assetBundle, stream);
+                assetBundles.Add(abInfo);
 
                 //
-                string configKey = string.Format("AssetHash_{0}", name);
-                PlayerPrefs.SetString(configKey, "");
-                Debug.LogWarning(string.Format("Failed to load {0}.unity3d", name));
-                break;
-            }
+                Debug.Log(string.Format("Loaded {0}", fileName));
+                // TODO: 나중에 Hash값 비교 추가해야 함
+                //PlayerPrefs.SetString(configKey, req.assetBundle.GetHashCode());
+
+                //
+                if (onProgress != null)
+                    onProgress(++i / (float)nameCount);
+
+                _loaded = true;
+            }));
+
+            if (_loaded)
+                continue;
+
+            //
+            #region deprecated
+            // 지금은 안쓴다
+            ////
+            //yield return StartCoroutine(CoLoadFromPersistentDataPath(name, (req, stream) => {
+            //    // 실패했다면, 스트림 정리
+            //    if ((req == null || !req.assetBundle) && stream != null) {
+            //        stream.Close();
+            //        return;
+            //    }
+
+            //    // 성공했다면 추가
+            //    req.assetBundle.name = name;
+            //    var abInfo = new AssetBundleInfo(req.assetBundle, stream);
+            //    assetBundles.Add(abInfo);
+
+            //    //
+            //    Debug.Log(string.Format("Loaded {0}", name));
+            //    PlayerPrefs.SetInt(configKey, req.assetBundle.GetHashCode());
+
+            //    //
+            //    if (onProgress != null)
+            //        onProgress(++i / (float)nameCount);
+
+            //    _loaded = true;
+            //}));
+
+            //if (_loaded)
+            //    continue;
+            #endregion
+
+            // 여기까지 오면 실패
+            success = false;
+
+            //
+            PlayerPrefs.SetInt(configKey, -1);
+            Debug.LogError(string.Format("Failed to load {0}", fileName));
+            break;
         }
 
         //
@@ -361,8 +293,53 @@ public abstract class AssetBundleManager : MonoBehaviour {
             loadedAll = true;
         onFinish(success);
 
+        //
         yield break;
     }
+
+    private IEnumerator CoLoadFromStreamingAssetsPath(string fileName, Action<AssetBundleCreateRequest, Stream> onFinish) {
+        Stream stream = null;
+        AssetBundleCreateRequest req = null;
+
+        // 일단 StreamingAssets 폴더에서 가져오기를 시도한다.
+        try {
+            string path = Path.Combine(Application.streamingAssetsPath, fileName);
+            stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            req = AssetBundle.LoadFromStreamAsync(stream);
+        } catch {
+            Debug.LogWarning("CoLoadFromStreamingAssetsPath Failed : " + fileName);
+        }
+
+        //
+        if (req != null)
+            yield return req;
+
+        //
+        onFinish(req, stream);
+    }
+
+    private IEnumerator CoLoadFromPersistentDataPath(string name, Action<AssetBundleCreateRequest, Stream> onFinish) {
+        Stream stream = null;
+        AssetBundleCreateRequest req = null;
+
+        // PersistentDataPath 폴더에서 가져오기를 시도한다.
+        try {
+            string path = Path.Combine(persistentDataPath, name);
+            stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            req = AssetBundle.LoadFromStreamAsync(stream);
+        } catch {
+            Debug.LogWarning("CoLoadFromStreamingAssetsPath Failed : " + name);
+        }
+
+        //
+        if (req != null)
+            yield return req;
+
+        //
+        onFinish(req, stream);
+    }
+
+
 
 
     public virtual void DownloadAll(ProgressCallback onProgress, DownloadCallback onFinish) {

@@ -33,8 +33,8 @@ public class TileParser : MonoBehaviour
 
         //
         Color32[] _colors_result_fixed = new Color32[_colors.Length];
-        for (int i = 0; i < _colors_result.Length; i++) {
-            _colors_result[i] = Color.white;
+        for (int i = 0; i < _colors_result_fixed.Length; i++) {
+            _colors_result_fixed[i] = Color.white;
         }
 
         //
@@ -154,59 +154,80 @@ public class TileParser : MonoBehaviour
                 break;
         }
 
+        //foreach (var p in _indexChecked) {
+        //    _colors_result_fixed[p] = Color.black;
+        //}
+
         //// 붙어있는 픽셀의 경우, 중앙에서 가장 먼 픽셀 빼고는 삭제
         //var centerPos = new Vector2(origin.width / 2, origin.height / 2);
         //List<KeyValuePair<float, int>> targets = new List<KeyValuePair<float, int>>();
-        //foreach (var point in _indexChecked) {
-        //    targets.Clear();
+        //count = 0;
+        //_indexChecked_toRemove.Clear();
+        //while (true) {
+        //    bool changed = false;
+        //    foreach (var point in _indexChecked) {
+        //        targets.Clear();
 
-        //    if (point + origin.width >= _colors_result.Length)
-        //        continue;
-        //    if (point - 1 < 0)
-        //        continue;
-        //    if (point + 1 >= _colors_result.Length)
-        //        continue;
-        //    if (point - origin.width < 0)
-        //        continue;
+        //        if (point + origin.width >= _colors_result.Length)
+        //            continue;
+        //        if (point - origin.width < 0)
+        //            continue;
+
+        //        //
+        //        var point_n = _colors_result[point + origin.width];
+        //        var point_w = _colors_result[point - 1];
+        //        var point_e = _colors_result[point + 1];
+        //        var point_s = _colors_result[point - origin.width];
+
+        //        //
+        //        var vec = new Vector2(point % origin.width, point / origin.width);
+        //        targets.Add(new KeyValuePair<float, int>(Vector2.Distance(vec, centerPos), point));
+
+        //        //
+        //        var isNorth = point / origin.width > centerPos.y;
+        //        var isWest = point % origin.width < centerPos.x;
+        //        var isEast = point % origin.width > centerPos.x;
+        //        var isSouth = point / origin.width < centerPos.y;
+
+        //        //
+        //        bool canClearCenter_ver = false;
+        //        bool canClearCenter_hor = false;
+        //        if (point_n == Color.black && isSouth) {
+        //            _colors_result[point + origin.width] = Color.white;
+        //            if (point_s == Color.black) {
+        //                canClearCenter_ver = true;
+        //            }
+        //        }
+        //        if (point_s == Color.black && isNorth) {
+        //            _colors_result[point - origin.width] = Color.white;
+        //            if (!canClearCenter_ver && point_n == Color.black) {
+        //                canClearCenter_ver = true;
+        //            }
+        //        }
+        //        if (point_e == Color.black && isWest) {
+        //            _colors_result[point + 1] = Color.white;
+        //            if (point_w == Color.black) {
+        //                canClearCenter_hor = true;
+        //            }
+        //        }
+        //        if (point_w == Color.black && isEast) {
+        //            _colors_result[point - 1] = Color.white;
+        //            if (!canClearCenter_hor && point_e == Color.black) {
+        //                canClearCenter_hor = true;
+        //            }
+        //        }
+
+        //        //
+        //        if (canClearCenter_ver && canClearCenter_hor)
+        //            _colors_result[point] = Color.white;
+
+        //        //
+        //        count++;
+        //    }
 
         //    //
-        //    var point_n = _colors_result[point + origin.width];
-        //    var point_w = _colors_result[point - 1];
-        //    var point_e = _colors_result[point + 1];
-        //    var point_s = _colors_result[point - origin.width];
-
-        //    //
-        //    var vec = new Vector2(point % origin.width, point / origin.width);
-        //    targets.Add(new KeyValuePair<float, int>(Vector2.Distance(vec, centerPos), point));
-
-        //    if (point_n == Color.black) {
-        //        var vec_n = new Vector2((point + origin.width) % origin.width, (point + origin.width) / origin.width);
-        //        targets.Add(new KeyValuePair<float, int>(Vector2.Distance(vec_n, centerPos), point + origin.width));
-        //    }
-        //    if (point_s == Color.black) {
-        //        var vec_s = new Vector2((point - 1) % origin.width, (point - 1) / origin.width);
-        //        targets.Add(new KeyValuePair<float, int>(Vector2.Distance(vec_s, centerPos), point - 1));
-        //    }
-        //    if (point_e == Color.black) {
-        //        var vec_e = new Vector2((point + 1) % origin.width, (point + 1) / origin.width);
-        //        targets.Add(new KeyValuePair<float, int>(Vector2.Distance(vec_e, centerPos), point + 1));
-        //    }
-        //    if (point_w == Color.black) {
-        //        var vec_w = new Vector2((point - origin.width) % origin.width, (point - origin.width) / origin.width);
-        //        targets.Add(new KeyValuePair<float, int>(Vector2.Distance(vec_w, centerPos), point - origin.width));
-        //    }
-
-        //    //
-        //    float max = float.MinValue;
-        //    foreach (var key in targets) {
-        //        max = Mathf.Max(max, key.Key);
-        //    }
-
-        //    //
-        //    foreach (var pair in targets) {
-        //        if (pair.Key == max)
-        //            _colors_result_fixed[pair.Value] = Color.black;
-        //    }
+        //    if (changed == false || count >= 1)
+        //        break;
         //}
 
         parsedResult.SetPixels32(_colors_result);
@@ -231,7 +252,7 @@ public class TileParserEditor : Editor {
         DrawDefaultInspector();
         EditorGUILayout.Space();
 
-        hSliderValue = GUILayout.HorizontalSlider(hSliderValue, 100f, 150f);
+        hSliderValue = GUILayout.HorizontalSlider(hSliderValue, 10f, 150f);
         EditorGUILayout.Space();
         EditorGUILayout.Space();
         EditorGUILayout.Space();

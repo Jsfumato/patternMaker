@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ public class TilerManager : MonoBehaviour {
     //
     public Transform parentUI;
     public Transform parentContent;
+
+    //
+    private bool _inited = false;
 
     public static TilerManager Get() {
         return instance;
@@ -34,12 +38,27 @@ public class TilerManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
         //
-        ResourceManager.Get().Initialize();
+        AssetBundleManager.Get().LoadAll((bool success) => {
+            if (!success) {
+                Debug.LogError("AssetBundleManager::LoadAll failed");
+                return;
+            }
 
-        //
-        editManager.Initialize();
-        lobby.Initialize();
-        stageManager.Initialize();
+            try {
+                //
+                ResourceManager.Get().Initialize();
+
+                //
+                editManager.Initialize();
+                lobby.Initialize();
+                stageManager.Initialize();
+
+                //
+                _inited = true;
+            } catch (Exception e) {
+                Application.Quit();
+            }
+        }, null);
     }
 
     public void FadeOutAll() {
