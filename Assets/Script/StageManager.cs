@@ -22,9 +22,6 @@ public class StageManager : MonoBehaviour {
         if (cell.activeSelf)
             cell.SetActive(false);
 
-        //
-        ResourceManager.Get().Reload();
-
         // stage 정보 세팅
         foreach (ResourceStage resStage in ResourceManager.Get().GetStages()) {
             var cloned = GameObject.Instantiate(cell);

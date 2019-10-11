@@ -15,10 +15,11 @@ public class ResourceManager {
     const string DIR_PATCHES = "Assets/" + PATCH_FOLDER_NAME + "/";
 
     //
-    private List<ResourceStage> stages = new List<ResourceStage>();
+    private Dictionary<long, ResourceStage> stages = new Dictionary<long, ResourceStage>();
 
-    public List<ResourceStage> GetStages() {
-        return stages;
+    //
+    public ICollection<ResourceStage> GetStages() {
+        return stages.Values;
     }
 
     public static ResourceManager Get() {
@@ -33,105 +34,34 @@ public class ResourceManager {
             return;
 
         //
-        Reload();
+        ReloadAll();
+        //InitStages();
 
         //
         singleton.inited = true;
     }
 
-    public void Reload() {
-        InitStages();
-    }
-
-    private void InitStages() {
-
+    private void ReloadAll() {
         //
+        string _folderName = "Json";
+
+        // TODO: 컨테이너 정리 필요
         stages.Clear();
 
         //
-        foreach (string textAssetName in Utility.GetFileNamesAtPath("Patches/Stages")) {
-            var ta = Utility.LoadResource<TextAsset>(textAssetName);
-            var map = Utility.ParseJSONfromTextAsset(ta);
+        foreach (string textAssetName in Utility.GetFileNamesAtPath("Patches/" + _folderName)) {
+            var ta = Utility.LoadPatches<TextAsset>(_folderName + "/" + textAssetName);
+            var parsed = Utility.ParseJSONfromTextAsset(ta);
 
-            //
-            stages.Add(new ResourceStage(map));
+            foreach (var jStage in parsed) {
+                //
+                var resStage = new ResourceStage(jStage);
+                stages.Add(resStage.id, resStage);
+            }
 
             //
             Resources.UnloadAsset(ta);
+            Debug.Log(textAssetName + " : " + parsed.Count);
         }
-
-        //
-        Debug.Log(stages.Count);
-
-        //var reader = Utility.Parse (new MemoryStream(ta.bytes));
-        //reader.ReadToFollowing("Items");
-
-        //while (reader.Read()) {
-        //    if (reader.NodeType == XmlNodeType.Element) {
-        //        var n = new SmartXmlNode(reader);
-        //        items[long.Parse(n.id)] = new LazyResourceItem(n);
-
-        //        var _type = Utility.ParseEnum(n.GetChildText("Type", string.Empty), ResourceItem.Type.UNKNOWN);
-        //        if (_type == ResourceItem.Type.HAIR)
-        //            hairIDs.Add(long.Parse(n.id));
-        //        else if (_type == ResourceItem.Type.HEAD)
-        //            headIDs.Add(long.Parse(n.id));
-        //    }
-        //}
-
-        ////
-        //Resources.UnloadAsset(ta);
-
-        ////
-        //ta = Utility.LoadResource<TextAsset>("ShopItems.xml");
-        //reader = new XmlTextReader(new MemoryStream(ta.bytes));
-        //reader.ReadToFollowing("Items");
-
-        ////while (reader.Read()) {
-        ////    if (reader.NodeType == XmlNodeType.Element) {
-        ////        var n = new SmartXmlNode(reader);
-        ////        cashShopMenu = new ResourceCashShopMenu(n);
-        ////        break;
-        ////    }
-        ////}
-
-        //while (reader.Read()) {
-        //    if (reader.NodeType == XmlNodeType.Element) {
-        //        var n = new SmartXmlNode(reader);
-        //        items[long.Parse(n.id)] = new LazyResourceItem(n);
-        //    }
-        //}
-
-        ////
-        //Resources.UnloadAsset(ta);
-
-        ////
-        //ta = Utility.LoadResource<TextAsset>("ClanItems.xml");
-        //reader = new XmlTextReader(new MemoryStream(ta.bytes));
-        //reader.ReadToFollowing("Items");
-
-        //while (reader.Read()) {
-        //    if (reader.NodeType == XmlNodeType.Element) {
-        //        var n = new SmartXmlNode(reader);
-        //        items[long.Parse(n.id)] = new LazyResourceItem(n);
-        //        clanShopItemIDs.Add(long.Parse(n.id));
-        //    }
-        //}
-
-        //
-
-        //
-        // also log the totals. Since these are static, they will be for all runs.
-        //		foreach (var total in TinyProfiler.Totals.OrderByDescending(t => t.TotalExecutionTimeInMilliseconds)) {
-        //			Debug.Log(string.Format(
-        //				"{0}: invoked {1} times, totalling {2}ms, Moving Average={3}ms",
-        //				total.Name,
-        //				total.TotalInvocationCount,
-        //				total.TotalExecutionTimeInMilliseconds,
-        //				total.AverageExecutionTimeInMilliseconds
-        //			));
-        //			// The AverageExecutionTimeInMilliseconds is a moving average over 10 frames, this negates the effects of warmup over time
-        //			// To determine the real average just do total.TotalExecutionTimeInMilliseconds / total.TotalInvocationCount
-        //		}
     }
 }

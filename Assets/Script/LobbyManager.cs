@@ -77,7 +77,6 @@ public class LobbyManager : MonoBehaviour{
         btStage.onClick.RemoveAllListeners();
         btStage.onClick.AddListener(() => {
             TilerManager.Get().HideAll();
-            ResourceManager.Get().Reload();
             OnStage(() => {
                 TilerManager.Get().stageManager.HideAll(null);
                 TilerManager.Get().stageManager.FadeInAll(null);

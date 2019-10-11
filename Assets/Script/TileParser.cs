@@ -264,7 +264,7 @@ public class TileParserEditor : Editor {
 
         if (GUILayout.Button("Save Parse")) {
             var _png = tp.parsedResult.EncodeToPNG();
-            Utility.SaveFile("test", _png);
+            Utility.SaveFile("Assets/Parser", "test", _png);
         }
     }
 }
