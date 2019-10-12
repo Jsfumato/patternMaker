@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 1966570760
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: json
+      Dependencies: {}
+    Info_1:
+      Name: tiles
+      Dependencies: {}

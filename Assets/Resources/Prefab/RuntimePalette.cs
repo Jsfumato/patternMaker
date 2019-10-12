@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class RuntimePalette : MonoBehaviour
-{
+public class RuntimePalette : MonoBehaviour {
     //
     public RectTransform rectTrans;
     public RawImage rawImg;
@@ -42,8 +41,7 @@ public class RuntimePalette : MonoBehaviour
         return _palette;
     }
 
-    public enum DrawMode
-    {
+    public enum DrawMode {
         Draw = 0,
         Erase
     }
@@ -299,13 +297,13 @@ public class RuntimePalette : MonoBehaviour
 
     public void MarkPixelsToColour(Vector2 center_pixel, int pen_thickness, Color color_of_pen) {
         // Figure out how many pixels we need to colour in each direction (x and y)
-        int center_x = (int)center_pixel.x;
-        int center_y = (int)center_pixel.y;
+        int center_x = (int) center_pixel.x;
+        int center_y = (int) center_pixel.y;
         //int extra_radius = Mathf.Min(0, pen_thickness - 2);
 
         for (int x = center_x - pen_thickness; x <= center_x + pen_thickness; x++) {
             // Check if the X wraps around the image, so we don't draw pixels on the other side of the image
-            if (x >= (int)myimage.width || x < 0)
+            if (x >= (int) myimage.width || x < 0)
                 continue;
 
             for (int y = center_y - pen_thickness; y <= center_y + pen_thickness; y++) {
@@ -436,7 +434,7 @@ public class RuntimePalette : MonoBehaviour
 
         Color32[] _colors = image.GetPixels32();
         HashSet<Vector2> _targetRemoved = new HashSet<Vector2>();
-                
+
         //
         var m_List = new Queue<Vector2>();
         var _check = new HashSet<int>();

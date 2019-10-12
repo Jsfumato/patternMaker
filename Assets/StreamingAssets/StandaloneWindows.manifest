@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 861547197
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: sprites
+      Dependencies: {}
+    Info_1:
+      Name: json
+      Dependencies: {}

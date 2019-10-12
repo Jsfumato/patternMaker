@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class AssetBundleManager : MonoBehaviour
-{
+public abstract class AssetBundleManager : MonoBehaviour {
 
     //
     public delegate void StatusCallback(bool success, string message, long fileSize);
@@ -109,7 +108,7 @@ public abstract class AssetBundleManager : MonoBehaviour
     //
     public static List<string> assetBundleNames = new List<string>() {
         "json",
-        "stages"
+        "tiles"
     };
 
     //
@@ -127,8 +126,7 @@ public abstract class AssetBundleManager : MonoBehaviour
         return _singleton;
     }
 
-    public class AssetBundleInfo
-    {
+    public class AssetBundleInfo {
         public Stream stream;
         public AssetBundle assetBundle;
 
@@ -221,8 +219,10 @@ public abstract class AssetBundleManager : MonoBehaviour
             bool _loaded = false;
             yield return StartCoroutine(CoLoadFromStreamingAssetsPath(fileName, (req, stream) => {
                 // 실패했다면, 스트림 정리
-                if ((req == null || !req.assetBundle) && stream != null) {
-                    stream.Close();
+                if (req == null || req.assetBundle == null || !req.assetBundle) {
+                    if (stream != null)
+                        stream.Close();
+                    Debug.LogError(string.Format("File Not Found : {0}", fileName));
                     return;
                 }
 
@@ -238,7 +238,7 @@ public abstract class AssetBundleManager : MonoBehaviour
 
                 //
                 if (onProgress != null)
-                    onProgress(++i / (float)nameCount);
+                    onProgress(++i / (float) nameCount);
 
                 _loaded = true;
             }));
