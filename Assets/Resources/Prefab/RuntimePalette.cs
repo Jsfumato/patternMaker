@@ -342,8 +342,9 @@ public class RuntimePalette : MonoBehaviour {
         return bytes;
     }
 
-    public void LoadFromBytes(byte[] bytes) {
-        myimage.LoadRawTextureData(bytes);
+    public void LoadFromBytes(ResourceStage resStage) {
+        Initialize((int) resStage.imgStage.rect.width, (int) resStage.imgStage.rect.height);
+        myimage.SetPixels32(resStage.imgStage.texture.GetPixels32());
         myimage.Apply();
     }
 

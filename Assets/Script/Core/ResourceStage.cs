@@ -8,9 +8,9 @@ using UnityEngine;
 public class ResourceStage : ResourceBase {
 
     //
-    public byte[] bytes;
-    public int width;
-    public int height;
+    //public byte[] bytes;
+    //public int width;
+    //public int height;
 
     public Sprite imgStage;
 

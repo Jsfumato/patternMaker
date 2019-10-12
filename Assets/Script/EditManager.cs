@@ -112,11 +112,7 @@ public class EditManager : MonoBehaviour {
     }
 
     public void OnLoadPalette(ResourceStage resStage) {
-        //
-        _runtimePalette.Initialize(resStage.width, resStage.height);
-        _runtimePalette.LoadFromBytes(resStage.bytes);
-
-        //
+        _runtimePalette.LoadFromBytes(resStage);
         _runtimePalette.gameObject.SetActive(true);
     }
 

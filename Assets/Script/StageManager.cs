@@ -31,10 +31,11 @@ public class StageManager : MonoBehaviour {
 
             // 정보 입력
             stageInfo.txtName.text = resStage.name;
-            stageInfo.texture = new Texture2D(resStage.width, resStage.height, TextureFormat.RGBA32, false);
-            stageInfo.texture.LoadRawTextureData(resStage.bytes);
-            stageInfo.texture.Apply();
-            stageInfo.rawImage.texture = stageInfo.texture;
+            stageInfo.image.sprite = resStage.imgStage;
+            //stageInfo.texture = new Texture2D(resStage.width, resStage.height, TextureFormat.RGBA32, false);
+            //stageInfo.texture = Texture2D.LoadRawTextureData(resStage.bytes);
+            //stageInfo.texture.Apply();
+            //stageInfo.rawImage.texture = stageInfo.texture;
 
             // 터치하면 퍼즐로 이동
             var btTouched = cloned.GetComponent<Button>();
