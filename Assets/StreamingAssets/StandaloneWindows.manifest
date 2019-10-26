@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 281228467
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: json
+      Dependencies: {}
+    Info_1:
+      Name: svg
+      Dependencies: {}
