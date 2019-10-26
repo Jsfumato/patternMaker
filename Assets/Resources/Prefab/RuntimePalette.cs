@@ -3,34 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using Unity.VectorGraphics;
 
 public class RuntimePalette : MonoBehaviour {
     //
+    [Header("Canvas")]
     public RectTransform rectTrans;
     public RawImage rawImg;
-    public int width;
-    public int height;
-    public Texture2D original;
+    public Material matUnlitVector;
+    public Texture2D rasterizedTex2D;
 
+    [Header("Brush UI")]
     public int brushSize;
-    public int eraseSize;
-
     public Color drawcolor;
-
     public bool fillmode = false;
 
-    // private
-    private Vector2 oldp = Vector2.zero;
-    public Texture2D myimage;
+    [Header("Erase UI")]
+    public int eraseSize;
 
+    // private
     private bool _init = false;
+    private Vector2 oldp = Vector2.zero;
     private List<List<Vector2>> _logs = new List<List<Vector2>>();
     private List<Vector2> _currentLog = new List<Vector2>();
-
     private Color32[] cur_colors;
     private bool _drawing = false;
 
-    //
+    // static instance
     private static RuntimePalette _palette;
 
     public static RuntimePalette Get() {
@@ -48,18 +47,9 @@ public class RuntimePalette : MonoBehaviour {
 
     private DrawMode _mode;
 
-    public void Initialize(int width, int height) {
+    public void Initialize(ResourceStage resStage) {
         //
         gameObject.SetActive(false);
-
-        //
-        this.width = width;
-        this.height = height;
-
-        //
-        if (original != null)
-            original = null;
-        original = new Texture2D(width, height, TextureFormat.RGBA32, false);
 
         // change these next three variables to whatever you want!!!
         drawcolor = Color.red;
@@ -67,59 +57,42 @@ public class RuntimePalette : MonoBehaviour {
         eraseSize = 20;
 
         //copy our original into our new paintable image 
-        myimage = new Texture2D(original.width, original.height, TextureFormat.RGBA32, false);
-        rectTrans.sizeDelta = new Vector2(original.width, original.height);
+        rasterizedTex2D = VectorUtils.RenderSpriteToTexture2D(resStage.imgStage, 640, 640, matUnlitVector);
+        rectTrans.sizeDelta = new Vector2(640, 640);
         rectTrans.pivot = Vector2.one * 0.5f;
         rectTrans.localPosition = Vector3.zero;
 
         //
-        OnClear();
-
-        //
-        rawImg.texture = myimage;
+        rawImg.texture = rasterizedTex2D;
 
         //
         gameObject.SetActive(true);
     }
 
-    public void OnClear() {
-        var _colors = myimage.GetPixels32();
+    public void Initialize(int width, int height) {
+        //
+        gameObject.SetActive(false);
 
-        for (int i = 0; i < _colors.Length; ++i) {
-            _colors[i] = Color.white;
-        }
+        // change these next three variables to whatever you want!!!
+        drawcolor = Color.red;
+        brushSize = 6;
+        eraseSize = 20;
 
-        myimage.SetPixels32(_colors);
-        myimage.Apply();
-        myimage.filterMode = FilterMode.Point;//<remove this if you want it more fuzzy
-    }
-
-    public void OnChangeCanvasSize(int width, int height) {
-        Initialize(width, height);
-
-        myimage = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        //copy our original into our new paintable image 
+        rasterizedTex2D = new Texture2D(width, height, TextureFormat.RGB24, false, true);
         rectTrans.sizeDelta = new Vector2(width, height);
         rectTrans.pivot = Vector2.one * 0.5f;
         rectTrans.localPosition = Vector3.zero;
 
         //
-        int _widthIdx = original.width;
-        while (_widthIdx-- > 0) {
-            int _heightIdx = original.width;
-            while (_heightIdx-- > 0) {
-                myimage.SetPixel(
-                    _widthIdx, _heightIdx,
-                    original.GetPixel(_widthIdx, _heightIdx)
-                    );
-            }
-        }
+        rawImg.texture = rasterizedTex2D;
 
         //
-        myimage.Apply();
-        myimage.filterMode = FilterMode.Point;//<remove this if you want it more fuzzy
+        gameObject.SetActive(true);
+    }
 
-        //
-        rawImg.texture = myimage;
+    public void OnChangeCanvasSize(int width, int height) {
+        Initialize(width, height);
     }
 
     public void OnChangeBrush(Color brushColor, int brushSize) {
@@ -164,8 +137,8 @@ public class RuntimePalette : MonoBehaviour {
         //
         if (fillmode) {
             var _origin = new Vector2(_px, _py);
-            var targets = GetTargets(myimage, _origin, drawcolor);
-            StartCoroutine(CoFillPaint(myimage, _origin, targets, drawcolor));
+            var targets = GetTargets(rasterizedTex2D, _origin, drawcolor);
+            StartCoroutine(CoFillPaint(rasterizedTex2D, _origin, targets, drawcolor));
             return;
         }
 
@@ -202,7 +175,7 @@ public class RuntimePalette : MonoBehaviour {
         _currentLog.Clear();
 
         //
-        cur_colors = myimage.GetPixels32();
+        cur_colors = rasterizedTex2D.GetPixels32();
     }
 
     public void OnPointerUP() {
@@ -222,8 +195,8 @@ public class RuntimePalette : MonoBehaviour {
         oldp = Vector2.zero;
 
         //
-        myimage.SetPixels32(cur_colors);
-        myimage.Apply();
+        rasterizedTex2D.SetPixels32(cur_colors);
+        rasterizedTex2D.Apply();
 
         //rawImg.texture = myimage;
     }
@@ -273,8 +246,8 @@ public class RuntimePalette : MonoBehaviour {
         }
 
         //
-        myimage.SetPixels32(cur_colors);
-        myimage.Apply();
+        rasterizedTex2D.SetPixels32(cur_colors);
+        rasterizedTex2D.Apply();
 
         yield break;
     }
@@ -303,7 +276,7 @@ public class RuntimePalette : MonoBehaviour {
 
         for (int x = center_x - pen_thickness; x <= center_x + pen_thickness; x++) {
             // Check if the X wraps around the image, so we don't draw pixels on the other side of the image
-            if (x >= (int) myimage.width || x < 0)
+            if (x >= (int) rasterizedTex2D.width || x < 0)
                 continue;
 
             for (int y = center_y - pen_thickness; y <= center_y + pen_thickness; y++) {
@@ -314,7 +287,7 @@ public class RuntimePalette : MonoBehaviour {
 
     public void MarkPixelToChange(int x, int y, Color color) {
         // Need to transform x and y coordinates to flat coordinates of array
-        int array_pos = y * myimage.width + x;
+        int array_pos = y * rasterizedTex2D.width + x;
 
         // Check if this is a valid position
         if (array_pos > cur_colors.Length || array_pos < 0)
@@ -328,15 +301,15 @@ public class RuntimePalette : MonoBehaviour {
 
     //===================================================
     public byte[] SaveAsBytes() {
-        var bytes = myimage.GetRawTextureData();
+        var bytes = rasterizedTex2D.GetRawTextureData();
 
         //
         var toString = System.Text.Encoding.Unicode.GetString(bytes);
         var des = System.Text.Encoding.Unicode.GetBytes(toString);
 
         //bytes = System.Text.Encoding.UTF8.GetBytes(bytes.ToString());
-        myimage.LoadRawTextureData(des);
-        myimage.Apply();
+        rasterizedTex2D.LoadRawTextureData(des);
+        rasterizedTex2D.Apply();
 
         //
         return bytes;
@@ -344,8 +317,8 @@ public class RuntimePalette : MonoBehaviour {
 
     public void LoadFromBytes(ResourceStage resStage) {
         Initialize((int) resStage.imgStage.rect.width, (int) resStage.imgStage.rect.height);
-        myimage.SetPixels32(resStage.imgStage.texture.GetPixels32());
-        myimage.Apply();
+        rasterizedTex2D.SetPixels32(resStage.imgStage.texture.GetPixels32());
+        rasterizedTex2D.Apply();
     }
 
     //===================================================
@@ -575,7 +548,7 @@ public class RuntimePalette : MonoBehaviour {
         }
 
         _check.Clear();
-        myimage.SetPixels32(_colors);
-        myimage.Apply();
+        rasterizedTex2D.SetPixels32(_colors);
+        rasterizedTex2D.Apply();
     }
 }

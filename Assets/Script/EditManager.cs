@@ -89,7 +89,7 @@ public class EditManager : MonoBehaviour {
     }
 
     public void OnClearPalette() {
-        RuntimePalette.Get().OnClear();
+        //RuntimePalette.Get().Initialize();
     }
 
     public void OnSavePalette() {
@@ -107,13 +107,12 @@ public class EditManager : MonoBehaviour {
 
                 //
                 Utility.ToJSONfile(name, map);
-            }, RuntimePalette.Get().SaveAsBytes(), RuntimePalette.Get().myimage.width, RuntimePalette.Get().myimage.height);
+            }, RuntimePalette.Get().SaveAsBytes(), RuntimePalette.Get().rasterizedTex2D.width, RuntimePalette.Get().rasterizedTex2D.height);
         }
     }
 
     public void OnLoadPalette(ResourceStage resStage) {
-        _runtimePalette.LoadFromBytes(resStage);
-        _runtimePalette.gameObject.SetActive(true);
+        _runtimePalette.Initialize(resStage);
     }
 
     // =========================================

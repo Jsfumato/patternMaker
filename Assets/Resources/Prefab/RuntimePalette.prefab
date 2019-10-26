@@ -61,12 +61,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTrans: {fileID: 2612307966968195622}
   rawImg: {fileID: 2612307966968195621}
-  width: 400
-  height: 500
-  original: {fileID: 0}
+  matUnlitVector: {fileID: 2100000, guid: a2b18b004cae0e64886afa2374bd51b7, type: 2}
+  rasterizedTex2D: {fileID: 0}
   brushSize: 0
-  eraseSize: 0
   drawcolor: {r: 0, g: 0, b: 0, a: 0}
+  fillmode: 0
+  eraseSize: 0
 --- !u!114 &2612307966968195621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,8 +85,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, Unity.ugui,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Texture: {fileID: 0}
   m_UVRect:
     serializedVersion: 2
@@ -122,8 +120,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, Unity.ugui,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   - eventID: 3
     callback:
       m_PersistentCalls:
@@ -139,5 +135,3 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, Unity.ugui,
-        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
