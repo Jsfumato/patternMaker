@@ -13,7 +13,6 @@ public class LobbyManager : MonoBehaviour{
     public Button btStart;
     public Button btStage;
     public Button btSetting;
-    public Button btMode;
 
     [Header("Transform")]
     public RectTransform title;
@@ -36,7 +35,7 @@ public class LobbyManager : MonoBehaviour{
     //
     private bool _inited = false;
 
-    public void Initialize() {
+    public void Initialize(bool isActive) {
         if (_inited) {
             //
             title.localPosition = initTitlePos;
@@ -59,9 +58,6 @@ public class LobbyManager : MonoBehaviour{
         initBtStagePos = rectStage.localPosition;
         initBtSettingPos = rectSetting.localPosition;
         initBtModePos = rectMode.localPosition;
-
-        // TODO: 아직 안쓰임
-        btMode.interactable = false;
 
         // 버튼 세팅
         btStart.onClick.RemoveAllListeners();
@@ -91,7 +87,7 @@ public class LobbyManager : MonoBehaviour{
         rectMode.localPosition = initBtModePos;
 
         //
-        gameObject.SetActive(true);
+        gameObject.SetActive(isActive);
         cGroup.alpha = 1.0f;
 
         //

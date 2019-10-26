@@ -33,7 +33,7 @@ public class EditManager : MonoBehaviour {
         btHome.onClick.RemoveAllListeners();
         btHome.onClick.AddListener(() => {
             TilerManager.Get().FadeOutAll();
-            TilerManager.Get().lobby.Initialize();
+            TilerManager.Get().lobby.Initialize(true);
         });
 
         //

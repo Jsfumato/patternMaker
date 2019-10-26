@@ -16,7 +16,7 @@ public class StageManager : MonoBehaviour {
     private Sequence _seqHideAll;
     private Sequence _used;
 
-    public void Initialize() {
+    public void Initialize(bool isActive) {
 
         //
         if (cell.activeSelf)
@@ -72,6 +72,9 @@ public class StageManager : MonoBehaviour {
                 .AppendCallback(() => gameObject.SetActive(false));
             _seqHideAll.Pause();
         }
+
+        //
+        gameObject.SetActive(isActive);
     }
 
     public void FadeInAll(TweenCallback callback) {

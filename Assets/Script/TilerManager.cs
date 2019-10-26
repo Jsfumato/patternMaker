@@ -50,8 +50,16 @@ public class TilerManager : MonoBehaviour {
 
                 //
                 editManager.Initialize();
-                lobby.Initialize();
-                stageManager.Initialize();
+                if (PlayerPrefs.GetInt(Constants.KEY.FIRST_VISITOR, 0) > 0) {
+                    lobby.Initialize(false);
+                    stageManager.Initialize(true);
+                } else {
+                    lobby.Initialize(true);
+                    stageManager.Initialize(false);
+                }
+
+                //
+                PlayerPrefs.SetInt(Constants.KEY.FIRST_VISITOR, 1);
 
                 //
                 _inited = true;
