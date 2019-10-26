@@ -108,7 +108,7 @@ public abstract class AssetBundleManager : MonoBehaviour {
     //
     public static List<string> assetBundleNames = new List<string>() {
         "json",
-        "tiles"
+        "svg"
     };
 
     //

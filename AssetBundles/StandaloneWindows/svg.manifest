@@ -1,0 +1,136 @@
+ManifestFileVersion: 0
+CRC: 3277315160
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 3408cf7a9c5b9f18a9352b4c9289ff53
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 25b0de44755a2b3dd1af8bc0a7e5588f
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Patches/svg/classic/78.svg
+- Assets/Patches/svg/classic/1.svg
+- Assets/Patches/svg/classic/103.svg
+- Assets/Patches/svg/classic/3.svg
+- Assets/Patches/svg/classic/63.svg
+- Assets/Patches/svg/classic/32.svg
+- Assets/Patches/svg/classic/29.svg
+- Assets/Patches/svg/classic/55.svg
+- Assets/Patches/svg/classic/35.svg
+- Assets/Patches/svg/classic/86.svg
+- Assets/Patches/svg/classic/49.svg
+- Assets/Patches/svg/classic/83.svg
+- Assets/Patches/svg/classic/109.svg
+- Assets/Patches/svg/classic/94.svg
+- Assets/Patches/svg/classic/81.svg
+- Assets/Patches/svg/classic/105.svg
+- Assets/Patches/svg/classic/15.svg
+- Assets/Patches/svg/classic/51.svg
+- Assets/Patches/svg/classic/65.svg
+- Assets/Patches/svg/classic/72.svg
+- Assets/Patches/svg/classic/33.svg
+- Assets/Patches/svg/classic/18.svg
+- Assets/Patches/svg/classic/95.svg
+- Assets/Patches/svg/classic/59.svg
+- Assets/Patches/svg/classic/96.svg
+- Assets/Patches/svg/classic/42.svg
+- Assets/Patches/svg/classic/16.svg
+- Assets/Patches/svg/classic/37.svg
+- Assets/Patches/svg/classic/53.svg
+- Assets/Patches/svg/classic/8.svg
+- Assets/Patches/svg/classic/110.svg
+- Assets/Patches/svg/classic/84.svg
+- Assets/Patches/svg/classic/58.svg
+- Assets/Patches/svg/classic/76.svg
+- Assets/Patches/svg/classic/47.svg
+- Assets/Patches/svg/classic/85.svg
+- Assets/Patches/svg/classic/101.svg
+- Assets/Patches/svg/classic/27.svg
+- Assets/Patches/svg/classic/44.svg
+- Assets/Patches/svg/classic/102.svg
+- Assets/Patches/svg/classic/104.svg
+- Assets/Patches/svg/classic/74.svg
+- Assets/Patches/svg/classic/73.svg
+- Assets/Patches/svg/classic/48.svg
+- Assets/Patches/svg/classic/26.svg
+- Assets/Patches/svg/classic/52.svg
+- Assets/Patches/svg/classic/25.svg
+- Assets/Patches/svg/classic/10.svg
+- Assets/Patches/svg/classic/88.svg
+- Assets/Patches/svg/classic/90.svg
+- Assets/Patches/svg/classic/70.svg
+- Assets/Patches/svg/classic/34.svg
+- Assets/Patches/svg/classic/14.svg
+- Assets/Patches/svg/classic/7.svg
+- Assets/Patches/svg/classic/82.svg
+- Assets/Patches/svg/classic/66.svg
+- Assets/Patches/svg/classic/92.svg
+- Assets/Patches/svg/classic/30.svg
+- Assets/Patches/svg/classic/98.svg
+- Assets/Patches/svg/classic/79.svg
+- Assets/Patches/svg/classic/23.svg
+- Assets/Patches/svg/classic/28.svg
+- Assets/Patches/svg/classic/56.svg
+- Assets/Patches/svg/classic/97.svg
+- Assets/Patches/svg/classic/80.svg
+- Assets/Patches/svg/classic/40.svg
+- Assets/Patches/svg/classic/39.svg
+- Assets/Patches/svg/classic/54.svg
+- Assets/Patches/svg/classic/60.svg
+- Assets/Patches/svg/classic/45.svg
+- Assets/Patches/svg/classic/46.svg
+- Assets/Patches/svg/classic/19.svg
+- Assets/Patches/svg/classic/13.svg
+- Assets/Patches/svg/classic/64.svg
+- Assets/Patches/svg/classic/43.svg
+- Assets/Patches/svg/classic/41.svg
+- Assets/Patches/svg/classic/106.svg
+- Assets/Patches/svg/classic/5.svg
+- Assets/Patches/svg/classic/111.svg
+- Assets/Patches/svg/classic/4.svg
+- Assets/Patches/svg/classic/108.svg
+- Assets/Patches/svg/classic/31.svg
+- Assets/Patches/svg/classic/67.svg
+- Assets/Patches/svg/classic/38.svg
+- Assets/Patches/svg/classic/22.svg
+- Assets/Patches/svg/classic/17.svg
+- Assets/Patches/svg/classic/62.svg
+- Assets/Patches/svg/classic/107.svg
+- Assets/Patches/svg/classic/99.svg
+- Assets/Patches/svg/classic/91.svg
+- Assets/Patches/svg/classic/57.svg
+- Assets/Patches/svg/classic/21.svg
+- Assets/Patches/svg/classic/20.svg
+- Assets/Patches/svg/classic/24.svg
+- Assets/Patches/svg/classic/2.svg
+- Assets/Patches/svg/classic/71.svg
+- Assets/Patches/svg/classic/75.svg
+- Assets/Patches/svg/classic/68.svg
+- Assets/Patches/svg/classic/9.svg
+- Assets/Patches/svg/classic/93.svg
+- Assets/Patches/svg/classic/50.svg
+- Assets/Patches/svg/classic/36.svg
+- Assets/Patches/svg/classic/69.svg
+- Assets/Patches/svg/classic/6.svg
+- Assets/Patches/svg/classic/12.svg
+- Assets/Patches/svg/classic/100.svg
+- Assets/Patches/svg/classic/87.svg
+- Assets/Patches/svg/classic/77.svg
+- Assets/Patches/svg/classic/11.svg
+- Assets/Patches/svg/classic/89.svg
+- Assets/Patches/svg/classic/61.svg
+Dependencies: []

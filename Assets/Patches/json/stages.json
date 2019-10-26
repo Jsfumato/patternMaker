@@ -1,5 +1,50 @@
 [{
 	"id":1,
 	"name":"test",
-	"sprite":"Patches/parsing_sample.png"
+	"sprite":"Patches/svg/classic/1.svg"
+},
+{
+	"id":2,
+	"name":"test",
+	"sprite":"Patches/svg/classic/2.svg"
+},
+{
+	"id":3,
+	"name":"test",
+	"sprite":"Patches/svg/classic/3.svg"
+},
+{
+	"id":4,
+	"name":"test",
+	"sprite":"Patches/svg/classic/5.svg"
+},
+{
+	"id":5,
+	"name":"test",
+	"sprite":"Patches/svg/classic/5.svg"
+},
+{
+	"id":6,
+	"name":"test",
+	"sprite":"Patches/svg/classic/6.svg"
+},
+{
+	"id":7,
+	"name":"test",
+	"sprite":"Patches/svg/classic/7.svg"
+},
+{
+	"id":8,
+	"name":"test",
+	"sprite":"Patches/svg/classic/8.svg"
+},
+{
+	"id":9,
+	"name":"test",
+	"sprite":"Patches/svg/classic/9.svg"
+},
+{
+	"id":10,
+	"name":"test",
+	"sprite":"Patches/svg/classic/10.svg"
 }]

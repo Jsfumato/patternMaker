@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class StageCell : MonoBehaviour {
-
     public Text txtName;
-    //public Texture2D texture;
-    public Image image;
-    //public RawImage rawImage;
+    public SVGImage svg;
+
+    //
+    public void Initialize(ResourceStage resStage) {
+        txtName.text = resStage.name;
+        svg.sprite = resStage.imgStage;
+    }
 }
