@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TilerManager : MonoBehaviour {
     public EditManager editManager;
-    public LobbyManager lobby;
+    //public LobbyManager lobby;
     public StageManager stageManager;
 
     // http://lonpeach.com/2017/02/04/unity3d-singleton-pattern-example/
@@ -15,27 +15,28 @@ public class TilerManager : MonoBehaviour {
     public Transform parentUI;
     public Transform parentContent;
 
-    //
-    private bool _inited = false;
-
     public static TilerManager Get() {
+        if (instance == null)
+            instance = FindObjectOfType<TilerManager>();
+
+        //
+        if (instance == null) { 
+            var go = new GameObject();
+            instance = go.AddComponent<TilerManager>();
+            DontDestroyOnLoad(go);
+        }
+
+        //
         return instance;
     }
 
     public void Awake() {
-        //Check if instance already exists
-        if (instance == null) {
-            //if not, set instance to this
-            instance = this;
-        }
-        //If instance already exists and it's not this:
-        else if (instance != this) {
-            //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
-            Destroy(gameObject);
-        }
+        // 명시적 초기화
+        Get().Initialize();
+    }
 
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+    public void Initialize() {
+        // 싱글톤 세팅은 Get에서
 
         //
         AssetBundleManager.Get().LoadAll((bool success) => {
@@ -48,21 +49,20 @@ public class TilerManager : MonoBehaviour {
                 //
                 ResourceManager.Get().Initialize();
 
-                //
-                editManager.Initialize();
+                // 첫 실행인지 확인, 첫 실행이 아니라면 바로 stage 보여줌
                 if (PlayerPrefs.GetInt(Constants.KEY.FIRST_VISITOR, 0) > 0) {
-                    lobby.Initialize(false);
+                    //lobby.Initialize(false);
                     stageManager.Initialize(true);
+                // 첫 실행이라면 lobby 먼저 보여줌
                 } else {
-                    lobby.Initialize(true);
-                    stageManager.Initialize(false);
+                    //lobby.Initialize(true);
+                    //stageManager.Initialize(false);
+                    stageManager.Initialize(true);
                 }
-
-                //
                 PlayerPrefs.SetInt(Constants.KEY.FIRST_VISITOR, 1);
 
                 //
-                _inited = true;
+                editManager.Initialize();
             } catch (Exception e) {
                 Application.Quit();
             }
@@ -72,15 +72,15 @@ public class TilerManager : MonoBehaviour {
     public void FadeOutAll() {
         if (editManager.isActiveAndEnabled)
             editManager.FadeOutAll(null);
-        if (lobby.isActiveAndEnabled)
-            lobby.FadeOutAll(null);
+        //if (lobby.isActiveAndEnabled)
+        //    lobby.FadeOutAll(null);
         if (stageManager.isActiveAndEnabled)
             stageManager.FadeOutAll(null);
     }
 
     public void HideAll() {
         editManager.gameObject.SetActive(false);
-        lobby.gameObject.SetActive(false);
+        //lobby.gameObject.SetActive(false);
         stageManager.gameObject.SetActive(false);
     }
 }

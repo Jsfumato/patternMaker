@@ -1,144 +1,144 @@
-﻿using DG.Tweening;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿//using DG.Tweening;
+//using System;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using UnityEngine.UI;
 
-public class LobbyManager : MonoBehaviour{
+//public class LobbyManager : MonoBehaviour{
 
-    public CanvasGroup cGroup;
+//    public CanvasGroup cGroup;
 
-    [Header("Buttons")]
-    public Button btStart;
-    public Button btStage;
-    public Button btSetting;
+//    [Header("Buttons")]
+//    public Button btStart;
+//    public Button btStage;
+//    public Button btSetting;
 
-    [Header("Transform")]
-    public RectTransform title;
-    public RectTransform rectStart;
-    public RectTransform rectStage;
-    public RectTransform rectSetting;
-    public RectTransform rectMode;
+//    [Header("Transform")]
+//    public RectTransform title;
+//    public RectTransform rectStart;
+//    public RectTransform rectStage;
+//    public RectTransform rectSetting;
+//    public RectTransform rectMode;
 
-    //
-    private Vector3 initTitlePos;
-    private Vector3 initBtStartPos;
-    private Vector3 initBtStagePos;
-    private Vector3 initBtSettingPos;
-    private Vector3 initBtModePos;
+//    //
+//    private Vector3 initTitlePos;
+//    private Vector3 initBtStartPos;
+//    private Vector3 initBtStagePos;
+//    private Vector3 initBtSettingPos;
+//    private Vector3 initBtModePos;
 
-    //
-    private Sequence _seqHideAll;
-    private Sequence _used;
+//    //
+//    private Sequence _seqHideAll;
+//    private Sequence _used;
 
-    //
-    private bool _inited = false;
+//    //
+//    private bool _inited = false;
 
-    public void Initialize(bool isActive) {
-        if (_inited) {
-            //
-            title.localPosition = initTitlePos;
-            rectStart.localPosition = initBtStartPos;
-            rectStage.localPosition = initBtStagePos;
-            rectSetting.localPosition = initBtSettingPos;
-            rectMode.localPosition = initBtModePos;
+//    public void Initialize(bool isActive) {
+//        if (_inited) {
+//            //
+//            title.localPosition = initTitlePos;
+//            rectStart.localPosition = initBtStartPos;
+//            rectStage.localPosition = initBtStagePos;
+//            rectSetting.localPosition = initBtSettingPos;
+//            rectMode.localPosition = initBtModePos;
 
-            //
-            gameObject.SetActive(true);
-            cGroup.alpha = 1.0f;
+//            //
+//            gameObject.SetActive(true);
+//            cGroup.alpha = 1.0f;
 
-            //
-            return;
-        }
+//            //
+//            return;
+//        }
 
-        // 초기 위치 저장하고
-        initTitlePos = title.localPosition;
-        initBtStartPos = rectStart.localPosition;
-        initBtStagePos = rectStage.localPosition;
-        initBtSettingPos = rectSetting.localPosition;
-        initBtModePos = rectMode.localPosition;
+//        // 초기 위치 저장하고
+//        initTitlePos = title.localPosition;
+//        initBtStartPos = rectStart.localPosition;
+//        initBtStagePos = rectStage.localPosition;
+//        initBtSettingPos = rectSetting.localPosition;
+//        initBtModePos = rectMode.localPosition;
 
-        // 버튼 세팅
-        btStart.onClick.RemoveAllListeners();
-        btStart.onClick.AddListener(() => {
-            TilerManager.Get().HideAll();
-            OnStart(() => {
-                TilerManager.Get().stageManager.HideAll(null);
-                TilerManager.Get().editManager.Initialize(200, 200);
-                TilerManager.Get().editManager.gameObject.SetActive(true);
-            });
-        });
+//        // 버튼 세팅
+//        btStart.onClick.RemoveAllListeners();
+//        btStart.onClick.AddListener(() => {
+//            TilerManager.Get().HideAll();
+//            OnStart(() => {
+//                TilerManager.Get().stageManager.HideAll(null);
+//                TilerManager.Get().editManager.Initialize(200, 200);
+//                TilerManager.Get().editManager.gameObject.SetActive(true);
+//            });
+//        });
 
-        btStage.onClick.RemoveAllListeners();
-        btStage.onClick.AddListener(() => {
-            TilerManager.Get().HideAll();
-            OnStage(() => {
-                TilerManager.Get().stageManager.HideAll(null);
-                TilerManager.Get().stageManager.FadeInAll(null);
-            });
-        });
+//        btStage.onClick.RemoveAllListeners();
+//        btStage.onClick.AddListener(() => {
+//            TilerManager.Get().HideAll();
+//            OnStage(() => {
+//                TilerManager.Get().stageManager.HideAll(null);
+//                TilerManager.Get().stageManager.FadeInAll(null);
+//            });
+//        });
 
-        //
-        title.localPosition = initTitlePos;
-        rectStart.localPosition = initBtStartPos;
-        rectStage.localPosition = initBtStagePos;
-        rectSetting.localPosition = initBtSettingPos;
-        rectMode.localPosition = initBtModePos;
+//        //
+//        title.localPosition = initTitlePos;
+//        rectStart.localPosition = initBtStartPos;
+//        rectStage.localPosition = initBtStagePos;
+//        rectSetting.localPosition = initBtSettingPos;
+//        rectMode.localPosition = initBtModePos;
 
-        //
-        gameObject.SetActive(isActive);
-        cGroup.alpha = 1.0f;
+//        //
+//        gameObject.SetActive(isActive);
+//        cGroup.alpha = 1.0f;
 
-        //
-        _inited = true;
-    }
+//        //
+//        _inited = true;
+//    }
 
-    private Sequence GetFadeOutSeq() {
-        return DOTween.Sequence()
-            .OnStart(() => {
-                //
-                title.localPosition = initTitlePos;
-                rectStart.localPosition = initBtStartPos;
-                rectStage.localPosition = initBtStagePos;
-                rectSetting.localPosition = initBtSettingPos;
-                rectMode.localPosition = initBtModePos;
+//    private Sequence GetFadeOutSeq() {
+//        return DOTween.Sequence()
+//            .OnStart(() => {
+//                //
+//                title.localPosition = initTitlePos;
+//                rectStart.localPosition = initBtStartPos;
+//                rectStage.localPosition = initBtStagePos;
+//                rectSetting.localPosition = initBtSettingPos;
+//                rectMode.localPosition = initBtModePos;
 
-                //
-                gameObject.SetActive(true);
-                cGroup.alpha = 1.0f;
-            })
-            .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-            .Append(cGroup.DOFade(0.0f, 0.5f))
-            .AppendCallback(() => gameObject.SetActive(false));
-    }
+//                //
+//                gameObject.SetActive(true);
+//                cGroup.alpha = 1.0f;
+//            })
+//            .Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
+//            .Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+//            .Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+//            .Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+//            .Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
+//            .Append(cGroup.DOFade(0.0f, 0.5f))
+//            .AppendCallback(() => gameObject.SetActive(false));
+//    }
 
-    // 애니메이션 지정
-    public void FadeOutAll(TweenCallback callback) {
-        if (_used != null)
-            _used.Kill();
+//    // 애니메이션 지정
+//    public void FadeOutAll(TweenCallback callback) {
+//        if (_used != null)
+//            _used.Kill();
 
-        //
-        _used = GetFadeOutSeq().OnComplete(callback);
-        _used.Restart();
-    }
+//        //
+//        _used = GetFadeOutSeq().OnComplete(callback);
+//        _used.Restart();
+//    }
 
 
-    // 타일 제작 UI 바로 진입
-    public void OnStart(TweenCallback callback) {
-        FadeOutAll(callback);
-    }
+//    // 타일 제작 UI 바로 진입
+//    public void OnStart(TweenCallback callback) {
+//        FadeOutAll(callback);
+//    }
 
-    // stage 리스트 출력
-    public void OnStage(TweenCallback callback) {
-        FadeOutAll(callback);
-    }
+//    // stage 리스트 출력
+//    public void OnStage(TweenCallback callback) {
+//        FadeOutAll(callback);
+//    }
 
-    public void OnSetting() {
+//    public void OnSetting() {
         
-    }
-}
+//    }
+//}
