@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StageManager : MonoBehaviour {
+public partial class TilerManager {
+
     //
-    public CanvasGroup cGroup;
+    public CanvasGroup cGroupStages;
 
     [Header("Table")]
     public GridLayoutGroup table;
@@ -16,7 +17,7 @@ public class StageManager : MonoBehaviour {
     private Sequence _seqHideAll;
     private Sequence _used;
 
-    public void Initialize(bool isActive) {
+    public void RefreshStages() {
 
         //
         if (cell.activeSelf)
@@ -38,7 +39,7 @@ public class StageManager : MonoBehaviour {
                 btTouched = cloned.AddComponent<Button>();
             btTouched.onClick.RemoveAllListeners();
             btTouched.onClick.AddListener(() => {
-                FadeOutAll(() => {
+                FadeOutAllStages(() => {
                     TilerManager.Get().editManager.Initialize(resStage);
                 });
             });
@@ -52,41 +53,25 @@ public class StageManager : MonoBehaviour {
         if (_seqHideAll == null) {
             _seqHideAll = DOTween.Sequence()
                 .OnStart(() => {
-                    //
-                    //title.localPosition = initTitlePos;
-                    //rectStart.localPosition = initBtStartPos;
-                    //rectStage.localPosition = initBtStagePos;
-                    //rectSetting.localPosition = initBtSettingPos;
-                    //rectMode.localPosition = initBtModePos;
-
-                    //
                     gameObject.SetActive(true);
-                    cGroup.alpha = 1.0f;
+                    cGroupStages.alpha = 1.0f;
                 })
-                //.Append(title.DOLocalMoveY(1500f, 2.0f).SetEase(Ease.InOutCirc))
-                //.Join(rectStart.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                //.Join(rectStage.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                //.Join(rectSetting.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                //.Join(rectMode.DOLocalMoveY(-1500f, 2.0f).SetEase(Ease.InOutCirc))
-                .Append(cGroup.DOFade(0.0f, 0.5f))
+                .Append(cGroupStages.DOFade(0.0f, 0.5f))
                 .AppendCallback(() => gameObject.SetActive(false));
             _seqHideAll.Pause();
         }
-
-        //
-        gameObject.SetActive(isActive);
     }
 
-    public void FadeInAll(TweenCallback callback) {
+    public void FadeInAllStages(TweenCallback callback) {
         if (_used != null)
             _used.Kill();
 
         //
         gameObject.SetActive(true);
-        cGroup.alpha = 1.0f;
+        cGroupStages.alpha = 1.0f;
     }
 
-    public void FadeOutAll(TweenCallback callback) {
+    public void FadeOutAllStages(TweenCallback callback) {
         if (_used != null)
             _used.Kill();
 
@@ -95,7 +80,7 @@ public class StageManager : MonoBehaviour {
         _used.Play();
     }
 
-    public void HideAll(TweenCallback callback) {
+    public void HideAllStages(TweenCallback callback) {
         if (_used != null)
             _used.Kill();
 

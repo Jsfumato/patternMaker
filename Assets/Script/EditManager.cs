@@ -12,6 +12,7 @@ public class EditManager : MonoBehaviour {
     public static RuntimePalette _runtimePalette;
 
     [Header("Button")]
+    public GameObject objectUI;
     public Button btHome;
     public Button btSave;
     public Button btChangeBrush;
@@ -51,6 +52,9 @@ public class EditManager : MonoBehaviour {
         //
         btToggleTool.onClick.RemoveAllListeners();
         btToggleTool.onClick.AddListener(_runtimePalette.OnToggleBrushMode);
+
+        //
+        objectUI.SetActive(true);
     }
 
     public void SetPaletteActive(bool active) {

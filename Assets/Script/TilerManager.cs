@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TilerManager : MonoBehaviour {
+public sealed partial class TilerManager : MonoBehaviour {
     public EditManager editManager;
     //public LobbyManager lobby;
-    public StageManager stageManager;
+    //public StageManager stageManager;
 
     // http://lonpeach.com/2017/02/04/unity3d-singleton-pattern-example/
     private static TilerManager instance;
@@ -52,12 +52,11 @@ public class TilerManager : MonoBehaviour {
                 // 첫 실행인지 확인, 첫 실행이 아니라면 바로 stage 보여줌
                 if (PlayerPrefs.GetInt(Constants.KEY.FIRST_VISITOR, 0) > 0) {
                     //lobby.Initialize(false);
-                    stageManager.Initialize(true);
+                    RefreshStages();
                 // 첫 실행이라면 lobby 먼저 보여줌
                 } else {
                     //lobby.Initialize(true);
-                    //stageManager.Initialize(false);
-                    stageManager.Initialize(true);
+                    RefreshStages();
                 }
                 PlayerPrefs.SetInt(Constants.KEY.FIRST_VISITOR, 1);
 
@@ -74,13 +73,12 @@ public class TilerManager : MonoBehaviour {
             editManager.FadeOutAll(null);
         //if (lobby.isActiveAndEnabled)
         //    lobby.FadeOutAll(null);
-        if (stageManager.isActiveAndEnabled)
-            stageManager.FadeOutAll(null);
+        FadeOutAllStages(null);
     }
 
     public void HideAll() {
         editManager.gameObject.SetActive(false);
         //lobby.gameObject.SetActive(false);
-        stageManager.gameObject.SetActive(false);
+        HideAllStages(null);
     }
 }

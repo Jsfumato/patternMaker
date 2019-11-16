@@ -35,7 +35,6 @@ public class ResourceManager {
 
         //
         ReloadAll();
-        //InitStages();
 
         //
         singleton.inited = true;
