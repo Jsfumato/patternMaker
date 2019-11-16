@@ -8,15 +8,14 @@ using UnityEngine.UI;
 public partial class TilerManager {
 
     //
-    public static RuntimePalette _runtimePalette;
-
-    [Header("Button")]
+    [Header("UI Palette")]
+    public RuntimePalette _runtimePalette;
     public GameObject UIPalette;
-    public Button btHome;
-    public Button btSave;
-    public Button btChangeBrush;
-    public Button btToggleTool;
-    public Button btClear;
+    //public Button btHome;
+    //public Button btSave;
+    //public Button btChangeBrush;
+    //public Button btToggleTool;
+    //public Button btClear;
 
     //
     private Sequence _seqHideAllPalette;
@@ -30,26 +29,26 @@ public partial class TilerManager {
         _runtimePalette.gameObject.SetActive(false);
 
         // 버튼 세팅
-        btHome.onClick.RemoveAllListeners();
-        btHome.onClick.AddListener(() => {
-            FadeOutAll();
-        });
+        //btHome.onClick.RemoveAllListeners();
+        //btHome.onClick.AddListener(() => {
+        //    FadeOutAll();
+        //});
 
-        //
-        btChangeBrush.onClick.RemoveAllListeners();
-        btChangeBrush.onClick.AddListener(OnChangeBrush);
+        ////
+        //btChangeBrush.onClick.RemoveAllListeners();
+        //btChangeBrush.onClick.AddListener(OnChangeBrush);
 
-        //
-        btClear.onClick.RemoveAllListeners();
-        btClear.onClick.AddListener(OnClearPalette);
+        ////
+        //btClear.onClick.RemoveAllListeners();
+        //btClear.onClick.AddListener(OnClearPalette);
 
-        //
-        btSave.onClick.RemoveAllListeners();
-        btSave.onClick.AddListener(OnSavePalette);
+        ////
+        //btSave.onClick.RemoveAllListeners();
+        //btSave.onClick.AddListener(OnSavePalette);
 
-        //
-        btToggleTool.onClick.RemoveAllListeners();
-        btToggleTool.onClick.AddListener(_runtimePalette.OnToggleBrushMode);
+        ////
+        //btToggleTool.onClick.RemoveAllListeners();
+        //btToggleTool.onClick.AddListener(_runtimePalette.OnToggleBrushMode);
 
         //
         UIPalette.SetActive(true);

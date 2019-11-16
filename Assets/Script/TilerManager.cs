@@ -51,10 +51,12 @@ public sealed partial class TilerManager : MonoBehaviour {
                 if (PlayerPrefs.GetInt(Constants.KEY.FIRST_VISITOR, 0) > 0) {
                     //lobby.Initialize(false);
                     RefreshStages();
-                // 첫 실행이라면 lobby 먼저 보여줌
+                    HideAllPalette(null);
+                    // 첫 실행이라면 lobby 먼저 보여줌
                 } else {
                     //lobby.Initialize(true);
                     RefreshStages();
+                    HideAllPalette(null);
                 }
                 PlayerPrefs.SetInt(Constants.KEY.FIRST_VISITOR, 1);
 
