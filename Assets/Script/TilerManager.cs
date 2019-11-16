@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public sealed partial class TilerManager : MonoBehaviour {
-    public EditManager editManager;
+    //public EditManager editManager;
     
     // http://lonpeach.com/2017/02/04/unity3d-singleton-pattern-example/
     private static TilerManager instance;
@@ -59,7 +59,7 @@ public sealed partial class TilerManager : MonoBehaviour {
                 PlayerPrefs.SetInt(Constants.KEY.FIRST_VISITOR, 1);
 
                 //
-                editManager.Initialize();
+                RefreshPallete();
             } catch (Exception e) {
                 Application.Quit();
             }
@@ -67,16 +67,12 @@ public sealed partial class TilerManager : MonoBehaviour {
     }
 
     public void FadeOutAll() {
-        if (editManager.isActiveAndEnabled)
-            editManager.FadeOutAll(null);
-        //if (lobby.isActiveAndEnabled)
-        //    lobby.FadeOutAll(null);
         FadeOutAllStages(null);
+        FadeOutAllPalette(null);
     }
 
     public void HideAll() {
-        editManager.gameObject.SetActive(false);
-        //lobby.gameObject.SetActive(false);
         HideAllStages(null);
+        HideAllPalette(null);
     }
 }

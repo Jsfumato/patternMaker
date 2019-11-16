@@ -12,8 +12,8 @@ public partial class TilerManager {
     public GameObject cell;
 
     //
-    private Sequence _seqHideAll;
-    private Sequence _used;
+    private Sequence _seqHideAllStages;
+    private Sequence _usedForStages;
 
     public void RefreshStages() {
 
@@ -38,7 +38,7 @@ public partial class TilerManager {
             btTouched.onClick.RemoveAllListeners();
             btTouched.onClick.AddListener(() => {
                 FadeOutAllStages(() => {
-                    TilerManager.Get().editManager.Initialize(resStage);
+                    RefreshPallete(resStage);
                 });
             });
 
@@ -48,21 +48,21 @@ public partial class TilerManager {
         }
 
         // 연출 세팅하고
-        if (_seqHideAll == null) {
-            _seqHideAll = DOTween.Sequence()
+        if (_seqHideAllStages == null) {
+            _seqHideAllStages = DOTween.Sequence()
                 .OnStart(() => {
                     gameObject.SetActive(true);
                     cGroupStages.alpha = 1.0f;
                 })
                 .Append(cGroupStages.DOFade(0.0f, 0.5f))
                 .AppendCallback(() => gameObject.SetActive(false));
-            _seqHideAll.Pause();
+            _seqHideAllStages.Pause();
         }
     }
 
     public void FadeInAllStages(TweenCallback callback) {
-        if (_used != null)
-            _used.Kill();
+        if (_usedForStages != null)
+            _usedForStages.Kill();
 
         //
         gameObject.SetActive(true);
@@ -70,17 +70,17 @@ public partial class TilerManager {
     }
 
     public void FadeOutAllStages(TweenCallback callback) {
-        if (_used != null)
-            _used.Kill();
+        if (_usedForStages != null)
+            _usedForStages.Kill();
 
         //
-        _used = _seqHideAll.OnComplete(callback);
-        _used.Play();
+        _usedForStages = _seqHideAllStages.OnComplete(callback);
+        _usedForStages.Play();
     }
 
     public void HideAllStages(TweenCallback callback) {
-        if (_used != null)
-            _used.Kill();
+        if (_usedForStages != null)
+            _usedForStages.Kill();
 
         //
         gameObject.SetActive(false);
