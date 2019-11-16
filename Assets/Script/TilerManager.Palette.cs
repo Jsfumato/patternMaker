@@ -125,5 +125,6 @@ public partial class TilerManager {
 
     public void HideAllPalette(TweenCallback callback) {
         _runtimePalette.gameObject.SetActive(false);
+        UIPalette.SetActive(false);
     }
 }
