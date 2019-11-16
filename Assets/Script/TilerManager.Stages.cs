@@ -6,10 +6,8 @@ using UnityEngine.UI;
 
 public partial class TilerManager {
 
-    //
+    [Header("Stage UI")]
     public CanvasGroup cGroupStages;
-
-    [Header("Table")]
     public GridLayoutGroup table;
     public GameObject cell;
 

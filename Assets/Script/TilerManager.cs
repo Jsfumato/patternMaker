@@ -5,13 +5,11 @@ using UnityEngine;
 
 public sealed partial class TilerManager : MonoBehaviour {
     public EditManager editManager;
-    //public LobbyManager lobby;
-    //public StageManager stageManager;
-
+    
     // http://lonpeach.com/2017/02/04/unity3d-singleton-pattern-example/
     private static TilerManager instance;
 
-    //
+    [Header("Main UI")]
     public Transform parentUI;
     public Transform parentContent;
 
