@@ -9,7 +9,7 @@ public partial class TilerManager {
 
     //
     [Header("UI Palette")]
-    public RuntimePalette _runtimePalette;
+    public RuntimePalette runtimePalette;
     public GameObject UIPalette;
     //public Button btHome;
     //public Button btSave;
@@ -21,53 +21,20 @@ public partial class TilerManager {
     private Sequence _seqHideAllPalette;
     private Sequence _usedForPalette;
 
-    public void RefreshPallete() {
-
-        //
-        _runtimePalette = RuntimePalette.Get();
-        _runtimePalette.transform.SetParent(TilerManager.Get().parentContent);
-        _runtimePalette.gameObject.SetActive(false);
-
-        // 버튼 세팅
-        //btHome.onClick.RemoveAllListeners();
-        //btHome.onClick.AddListener(() => {
-        //    FadeOutAll();
-        //});
-
-        ////
-        //btChangeBrush.onClick.RemoveAllListeners();
-        //btChangeBrush.onClick.AddListener(OnChangeBrush);
-
-        ////
-        //btClear.onClick.RemoveAllListeners();
-        //btClear.onClick.AddListener(OnClearPalette);
-
-        ////
-        //btSave.onClick.RemoveAllListeners();
-        //btSave.onClick.AddListener(OnSavePalette);
-
-        ////
-        //btToggleTool.onClick.RemoveAllListeners();
-        //btToggleTool.onClick.AddListener(_runtimePalette.OnToggleBrushMode);
-
-        //
-        UIPalette.SetActive(true);
-    }
-
     public void SetPaletteActive(bool active) {
-        _runtimePalette.gameObject.SetActive(active);
+        runtimePalette.gameObject.SetActive(active);
     }
 
     public void RefreshPallete(ResourceStage resStage) {
         if (resStage == null)
             return;
 
-        Initialize();
-        OnLoadPalette(resStage);
+        runtimePalette.Initialize(resStage);
+        UIPalette.SetActive(true);
     }
 
     public void OnChangeCanvas() {
-        var popup = Utility.InstantiatePrefab<Popup_ChangeCanvas>(TilerManager.Get().parentUI);
+        var popup = Utility.InstantiatePrefab<Popup_ChangeCanvas>(parentUI);
         if (popup.GetComponent<Popup_ChangeCanvas>() != null) {
             popup.GetComponent<Popup_ChangeCanvas>().Initialize((width, height) => {
                 RuntimePalette.Get().OnChangeCanvasSize(width, height);
@@ -76,7 +43,7 @@ public partial class TilerManager {
     }
 
     public void OnChangeBrush() {
-        var popup = Utility.InstantiatePrefab<Popup_ChangeBrush>(TilerManager.Get().parentUI);
+        var popup = Utility.InstantiatePrefab<Popup_ChangeBrush>(parentUI);
         if (popup.GetComponent<Popup_ChangeBrush>() != null) {
             popup.GetComponent<Popup_ChangeBrush>().Initialize((color, size) => {
                 RuntimePalette.Get().OnChangeBrush(color, size);
@@ -90,7 +57,7 @@ public partial class TilerManager {
 
     public void OnSavePalette() {
         // 
-        var popup = Utility.InstantiatePrefab<Popup_InputText>(TilerManager.Get().parentUI);
+        var popup = Utility.InstantiatePrefab<Popup_InputText>(parentUI);
         if (popup.GetComponent<Popup_InputText>() != null) {
             popup.GetComponent<Popup_InputText>().Initialize((name, bytes, width, height) => {
 
@@ -107,10 +74,6 @@ public partial class TilerManager {
         }
     }
 
-    public void OnLoadPalette(ResourceStage resStage) {
-        _runtimePalette.Initialize(resStage);
-    }
-
     // =========================================
     public void FadeOutAllPalette(TweenCallback callback) {
         if (_usedForPalette != null)
@@ -124,7 +87,7 @@ public partial class TilerManager {
     }
 
     public void HideAllPalette(TweenCallback callback) {
-        _runtimePalette.gameObject.SetActive(false);
+        runtimePalette.gameObject.SetActive(false);
         UIPalette.SetActive(false);
     }
 }

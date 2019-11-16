@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dd92be7b2e654048b9ff8a8f9ae810e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _runtimePalette: {fileID: 1276705078}
+  runtimePalette: {fileID: 1276705078}
   UIPalette: {fileID: 2093293039}
   cGroupStages: {fileID: 1046481687}
   table: {fileID: 730686008}
