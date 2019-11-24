@@ -11,6 +11,7 @@ public partial class TilerManager {
     [Header("UI Palette")]
     public RuntimePalette runtimePalette;
     public GameObject UIPalette;
+    public List<Image> imgStep;
     //public Button btHome;
     //public Button btSave;
     //public Button btChangeBrush;
@@ -22,6 +23,10 @@ public partial class TilerManager {
     public Sprite spriteFabric;
     public Animator effectAnimator;
     public Animation animClear;
+
+    [Header("cached")]
+    public Vector2 originSize = new Vector2(96, 48);
+    public Vector2 widerSize = new Vector2(176, 48);
 
     //
     private Sequence _seqHideAllPalette;
@@ -101,6 +106,23 @@ public partial class TilerManager {
     // 연출
     // ===================================================
     public void OnClearTray() {
+        EmphasizeButton(0);
         effectAnimator.SetTrigger("clear");
+    }
+
+    private void EmphasizeButton(int index) {
+        if (index < 0 || index >= imgStep.Count)
+            return;
+
+        DOTween.Sequence()
+            // reset size
+            .OnStart(() => {
+                imgStep[index].gameObject.SetActive(true);
+                foreach (var step in imgStep) {
+                    imgStep[index].rectTransform.DOSizeDelta(originSize, 0.5f);
+                }
+            })
+            // resize width
+            .Append(imgStep[index].rectTransform.DOSizeDelta(widerSize, 0.5f));
     }
 }
