@@ -48,16 +48,14 @@ public partial class TilerManager {
         }
 
         // 연출 세팅하고
-        if (_seqHideAllStages == null) {
-            _seqHideAllStages = DOTween.Sequence()
-                .OnStart(() => {
-                    gameObject.SetActive(true);
-                    cGroupStages.alpha = 1.0f;
-                })
-                .Append(cGroupStages.DOFade(0.0f, 0.5f))
-                .AppendCallback(() => gameObject.SetActive(false));
-            _seqHideAllStages.Pause();
-        }
+        _seqHideAllStages = DOTween.Sequence()
+            .OnStart(() => {
+                gameObject.SetActive(true);
+                cGroupStages.alpha = 1.0f;
+            })
+            .Append(cGroupStages.DOFade(0.0f, 0.5f))
+            .AppendCallback(() => gameObject.SetActive(false));
+        _seqHideAllStages.Pause();
 
         //
         cGroupStages.alpha = 1f;
