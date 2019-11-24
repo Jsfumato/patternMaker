@@ -105,11 +105,6 @@ public partial class TilerManager {
     // ===================================================
     // 연출
     // ===================================================
-    public void OnClearTray() {
-        EmphasizeButton(0);
-        effectAnimator.SetTrigger("clear");
-    }
-
     private void EmphasizeButton(int index) {
         if (index < 0 || index >= imgStep.Count)
             return;
@@ -124,5 +119,25 @@ public partial class TilerManager {
             })
             // resize width
             .Append(imgStep[index].rectTransform.DOSizeDelta(widerSize, 0.5f));
+    }
+
+    public void OnClearTray() {
+        EmphasizeButton(0);
+        effectAnimator.SetTrigger("clear");
+    }
+
+    public void OnSetColorpicker() {
+        EmphasizeButton(1);
+        effectAnimator.SetTrigger("color");
+    }
+
+    public void OnSanding() {
+        EmphasizeButton(2);
+        effectAnimator.SetTrigger("sanding");
+    }
+
+    public void OnPressing() {
+        EmphasizeButton(3);
+        effectAnimator.SetTrigger("pressing");
     }
 }
