@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -105,39 +106,38 @@ public partial class TilerManager {
     // ===================================================
     // 연출
     // ===================================================
-    private void EmphasizeButton(int index) {
+    private void EmphasizeButton(int index, Action callbackInit) {
         if (index < 0 || index >= imgStep.Count)
             return;
 
+        //
         DOTween.Sequence()
             // reset size
             .OnStart(() => {
-                imgStep[index].gameObject.SetActive(true);
                 foreach (var step in imgStep) {
-                    imgStep[index].rectTransform.DOSizeDelta(originSize, 0.5f);
+                    step.rectTransform.DOSizeDelta(originSize, 0.5f);
+                    step.gameObject.SetActive(true);
                 }
             })
+            .SetDelay(0.5f)
             // resize width
-            .Append(imgStep[index].rectTransform.DOSizeDelta(widerSize, 0.5f));
+            .Append(imgStep[index].rectTransform.DOSizeDelta(widerSize, 0.5f))
+            .AppendCallback(() => callbackInit());
     }
 
     public void OnClearTray() {
-        EmphasizeButton(0);
-        effectAnimator.SetTrigger("clear");
+        EmphasizeButton(0, () => effectAnimator.SetTrigger("clear"));
     }
 
     public void OnSetColorpicker() {
-        EmphasizeButton(1);
-        effectAnimator.SetTrigger("color");
+        EmphasizeButton(1, () => effectAnimator.SetTrigger("color"));
     }
 
     public void OnSanding() {
-        EmphasizeButton(2);
-        effectAnimator.SetTrigger("sanding");
+        EmphasizeButton(2, () => effectAnimator.SetTrigger("sanding"));
     }
 
     public void OnPressing() {
-        EmphasizeButton(3);
-        effectAnimator.SetTrigger("pressing");
+        EmphasizeButton(3, () => effectAnimator.SetTrigger("pressing"));
     }
 }
