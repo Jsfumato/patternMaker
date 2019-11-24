@@ -115,11 +115,11 @@ public partial class TilerManager {
             // reset size
             .OnStart(() => {
                 foreach (var step in imgStep) {
-                    step.rectTransform.DOSizeDelta(originSize, 0.5f);
+                    step.rectTransform.DOSizeDelta(originSize, 0.2f);
                     step.gameObject.SetActive(true);
                 }
             })
-            .SetDelay(0.5f)
+            .SetDelay(0.2f)
             // resize width
             .Append(imgStep[index].rectTransform.DOSizeDelta(widerSize, 0.5f))
             .AppendCallback(() => callbackInit());
