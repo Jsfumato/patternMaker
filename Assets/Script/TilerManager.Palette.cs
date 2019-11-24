@@ -17,6 +17,12 @@ public partial class TilerManager {
     //public Button btToggleTool;
     //public Button btClear;
 
+    [Header("Effect")]
+    public Image imgTool;
+    public Sprite spriteFabric;
+    public Animator effectAnimator;
+    public Animation animClear;
+
     //
     private Sequence _seqHideAllPalette;
     private Sequence _usedForPalette;
@@ -89,5 +95,12 @@ public partial class TilerManager {
     public void HideAllPalette(TweenCallback callback) {
         runtimePalette.gameObject.SetActive(false);
         UIPalette.SetActive(false);
+    }
+
+    // ===================================================
+    // 연출
+    // ===================================================
+    public void OnClearTray() {
+        effectAnimator.SetTrigger("clear");
     }
 }

@@ -58,6 +58,9 @@ public partial class TilerManager {
                 .AppendCallback(() => gameObject.SetActive(false));
             _seqHideAllStages.Pause();
         }
+
+        //
+        cGroupStages.alpha = 1f;
     }
 
     public void FadeInAllStages(TweenCallback callback) {
